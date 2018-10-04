@@ -17,6 +17,20 @@
                     "bank_id_code": "GBDSC",
                     "name": "Wilfred Jeremiah Owens"
                 },
+                "debtor_party": {
+                    "account_name": "EJ Brown Black",
+                    "account_number": "GB29XABC10161234567801",
+                    "account_number_code": "IBAN",
+                    "address": "10 Debtor Crescent Sourcetown NE1",
+                    "bank_id": "203301",
+                    "bank_id_code": "GBDSC",
+                    "name": "Emelia Jane Brown"
+                },
+                "sponsor_party": {
+                    "account_number": "56781234",
+                    "bank_id": "123123",
+                    "bank_id_code": "GBDSC"
+                },
                 "charges_information": {
                     "bearer_code": "SHAR",
                     "sender_charges": [
@@ -27,15 +41,6 @@
                     "receiver_charges_currency": "USD"
                 },
                 "currency": "GBP",
-                "debtor_party": {
-                    "account_name": "EJ Brown Black",
-                    "account_number": "GB29XABC10161234567801",
-                    "account_number_code": "IBAN",
-                    "address": "10 Debtor Crescent Sourcetown NE1",
-                    "bank_id": "203301",
-                    "bank_id_code": "GBDSC",
-                    "name": "Emelia Jane Brown"
-                },
                 "end_to_end_reference": "Wil piano Jan",
                 "fx": {
                     "contract_reference": "FX123",
@@ -51,12 +56,7 @@
                 "processing_date": "2017-01-18",
                 "reference": "Payment for Em's piano lessons",
                 "scheme_payment_sub_type": "InternetBanking",
-                "scheme_payment_type": "ImmediatePayment",
-                "sponsor_party": {
-                    "account_number": "56781234",
-                    "bank_id": "123123",
-                    "bank_id_code": "GBDSC"
-                }
+                "scheme_payment_type": "ImmediatePayment"
             }
         },
         {

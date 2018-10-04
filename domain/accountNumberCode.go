@@ -1,4 +1,4 @@
-package model
+package domain
 
 // AccountNumberCode is IBAN or BBAN
 type AccountNumberCode string
