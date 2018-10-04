@@ -7,7 +7,7 @@ import "github.com/google/uuid"
 type Payment struct {
 	// Type           string            `json:"type" validate:"required,"`
 	// Version        int               `json:"version"`
-	ID             uuid.UUID         `json:"id" validate:"required,uuid"`
-	OrganisationID uuid.UUID         `json:"organisation_id" validate:"required,uuid"`
+	ID             uuid.UUID         `json:"id" validate:"required"`
+	OrganisationID uuid.UUID         `json:"organisation_id" validate:"required"`
 	Attributes     PaymentAttributes `json:"attributes" validate:"required"`
 }
