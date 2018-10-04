@@ -16,7 +16,7 @@ type paymentParty struct {
 
 type paymentPartyExtended struct {
 	paymentParty
-	AccountType int `json:"account_type,omitempty" validate:"default"`
+	AccountType int `json:"account_type,omitempty" validate:"isdefault"`
 }
 
 // SponsorParty describes the sponsor of a payment
