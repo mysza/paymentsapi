@@ -6,7 +6,7 @@ import (
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
-func TestFieldsValidationRules(t *testing.T) {
+func TestChargeFieldsValidationRules(t *testing.T) {
 	var scenarios = []struct {
 		description string
 		charge      Charge
@@ -44,13 +44,11 @@ func TestFieldsValidationRules(t *testing.T) {
 		},
 	}
 	validator := validator.New()
-	t.Run("Requires the amount to be set", func(t *testing.T) {
-		for _, scenario := range scenarios {
-			t.Run(scenario.description, func(t *testing.T) {
-				if err := validator.Struct(scenario.charge); !scenario.passed(err) {
-					t.Errorf("Validation is defined inproperly: %s", err)
-				}
-			})
-		}
-	})
+	for _, scenario := range scenarios {
+		t.Run(scenario.description, func(t *testing.T) {
+			if err := validator.Struct(scenario.charge); !scenario.passed(err) {
+				t.Errorf("Validation is defined inproperly: %s", err)
+			}
+		})
+	}
 }
