@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -86,7 +85,6 @@ func TestPaymentFieldsValidationRules(t *testing.T) {
 	validator := validator.New()
 	for _, scenario := range scenarios {
 		t.Run(scenario.description, func(t *testing.T) {
-			fmt.Printf("Payment: %#v", scenario.payment)
 			if err := validator.Struct(scenario.payment); !scenario.passed(err) {
 				t.Errorf("Validation is defined inproperly: %s", err)
 			}

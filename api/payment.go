@@ -7,16 +7,16 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
-	"github.com/mysza/paymentsapi/model"
+	"github.com/mysza/paymentsapi/domain"
 )
 
 // PaymentRepository defines database (or other storage medium) operations
 // on a payment
 type PaymentRepository interface {
-	GetAll() (*[]model.Payment, error)
-	Get(id string) (*model.Payment, error)
+	GetAll() (*[]domain.Payment, error)
+	Get(id string) (*domain.Payment, error)
 	Create( /* define input */ ) (string, error) // returns id
-	Update(payment *model.Payment) error
+	Update(payment *domain.Payment) error
 	Delete(id string) error
 }
 
@@ -37,12 +37,12 @@ func (rs *PaymentResource) router() *chi.Mux {
 }
 
 func (rs *PaymentResource) getAll(w http.ResponseWriter, r *http.Request) {
-	payments := []*model.Payment{
-		&model.Payment{ID: uuid.New()},
-		&model.Payment{ID: uuid.New()},
-		&model.Payment{ID: uuid.New()},
-		&model.Payment{ID: uuid.New()},
-		&model.Payment{ID: uuid.New()},
+	payments := []*domain.Payment{
+		&domain.Payment{ID: uuid.New()},
+		&domain.Payment{ID: uuid.New()},
+		&domain.Payment{ID: uuid.New()},
+		&domain.Payment{ID: uuid.New()},
+		&domain.Payment{ID: uuid.New()},
 	}
 	response := newPaymentListResponse(payments)
 	render.Render(w, r, response)
@@ -72,7 +72,7 @@ func (pl *PaymentListResponse) Render(w http.ResponseWriter, r *http.Request) er
 	return nil
 }
 
-func newPaymentListResponse(payments []*model.Payment) *PaymentListResponse {
+func newPaymentListResponse(payments []*domain.Payment) *PaymentListResponse {
 	list := []*PaymentResponse{}
 	for _, payment := range payments {
 		list = append(list, &PaymentResponse{ID: payment.ID.String()})
