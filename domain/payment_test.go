@@ -3,6 +3,7 @@ package domain
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/google/uuid"
 	validator "gopkg.in/go-playground/validator.v9"
@@ -19,7 +20,65 @@ func TestPaymentFieldsValidationRules(t *testing.T) {
 			payment: Payment{
 				ID:             uuid.New(),
 				OrganisationID: uuid.New(),
-				Attributes:     PaymentAttributes{},
+				Attributes: PaymentAttributes{
+					Beneficiary: BeneficiaryPaymentParty{
+						PaymentParty: PaymentParty{
+							Account: Account{
+								AccountNumber: "56781234",
+								BankID:        "123123",
+								BankIDCode:    "GBDSC",
+							},
+							AccountName:       "EJ Brown Black",
+							AccountNumberCode: "IBAN",
+							Address:           "10 Debtor Crescent Sourcetown NE1",
+							Name:              "EJ Brown Black",
+						},
+						AccountType: 0,
+					},
+					Debtor: PaymentParty{
+						Account: Account{
+							AccountNumber: "56781234",
+							BankID:        "123123",
+							BankIDCode:    "GBDSC",
+						},
+						AccountName:       "EJ Brown Black",
+						AccountNumberCode: "IBAN",
+						Address:           "10 Debtor Crescent Sourcetown NE1",
+						Name:              "EJ Brown Black",
+					},
+					Sponsor: Account{
+						AccountNumber: "56781234",
+						BankID:        "123123",
+						BankIDCode:    "GBDSC",
+					},
+					ChargesInformation: ChargesInformation{
+						BearerCode:              "SHAR",
+						ReceiverChargesAmount:   "100.12",
+						ReceiverChargesCurrency: "USD",
+						SenderCharges: []Charge{
+							Charge{Currency: "USD", Amount: "5.00"},
+							Charge{Currency: "GBP", Amount: "15.00"},
+						},
+					},
+					FX: FX{
+						ContractReference: "FX123",
+						ExchangeRate:      "2.00",
+						OriginalAmount:    "100.12",
+						OriginalCurrency:  "USD",
+					},
+					ProcessingDate:       time.Now(),
+					Amount:               "100.12",
+					Currency:             "USD",
+					EndToEndReference:    "Some generic string",
+					NumericReference:     "123456",
+					PaymentID:            "123456789012345678",
+					PaymentPurpose:       "Paying for goods/services",
+					PaymentScheme:        "FPS",
+					PaymentType:          "Credit",
+					SchemePaymentType:    "InternetBanking",
+					SchemePaymentSubType: "ImmediatePayment",
+					Reference:            "Payment for Em's piano lessons",
+				},
 			},
 			passed: func(err error) bool { return err == nil },
 		},
