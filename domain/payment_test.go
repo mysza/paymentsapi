@@ -19,6 +19,7 @@ func TestPaymentFieldsValidationRules(t *testing.T) {
 			payment: Payment{
 				ID:             uuid.New(),
 				OrganisationID: uuid.New(),
+				Attributes:     PaymentAttributes{},
 			},
 			passed: func(err error) bool { return err == nil },
 		},
