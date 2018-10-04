@@ -6,7 +6,7 @@ import (
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
-func TestRequiredFields(t *testing.T) {
+func TestFieldsValidationRules(t *testing.T) {
 	var scenarios = []struct {
 		description string
 		charge      Charge
