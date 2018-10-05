@@ -65,3 +65,8 @@ func (ps *PaymentsService) Update(payment *domain.Payment) error {
 	}
 	return ps.repo.Update(payment)
 }
+
+// Get retrieves a single Payment based on ID
+func (ps *PaymentsService) Get(id *uuid.UUID) (*domain.Payment, error) {
+	return nil, nil
+}
