@@ -1,7 +1,10 @@
 package service
 
 import (
+	"fmt"
+
 	"github.com/mysza/paymentsapi/domain"
+	"github.com/mysza/paymentsapi/utils"
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
@@ -34,6 +37,11 @@ func NewPaymentsService(repo PaymentsRepository) *PaymentsService {
 // Add adds a new payment to the service.
 // Before that, it validates the argument.
 func (ps *PaymentsService) Add(payment *domain.Payment) (string, error) {
+	// check if ID is set
+	if payment.ID != nil {
+		return "", fmt.Errorf("Payment cannot have ID set when adding to repository")
+	}
+	payment.ID = utils.NewUUID()
 	if err := payment.Validate(ps.validator); err != nil {
 		return "", err
 	}
