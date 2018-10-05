@@ -10,6 +10,10 @@ import (
 // need to implement.
 type PaymentsRepository interface {
 	Add(*domain.Payment) (string, error)
+	GetAll() ([]*domain.Payment, error)
+	Update(*domain.Payment) error
+	Get(string) (*domain.Payment, error)
+	Delete(string) error
 }
 
 // PaymentsService implements all use cases of the Payments API.
