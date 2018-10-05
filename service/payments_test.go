@@ -554,3 +554,13 @@ func TestGetReturnsPaymentIfExistingIDPassed(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 }
+
+func TestGetReturnsErrorIfInvalidIDPassed(t *testing.T) {
+	ps := NewPaymentsService(nil)
+	assert := assert.New(t)
+	t.Run("PaymentsService Get returns error if invalid ID passed", func(t *testing.T) {
+		retPayment, err := ps.Get(nil)
+		assert.Error(err)
+		assert.Empty(retPayment)
+	})
+}
