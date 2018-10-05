@@ -8,6 +8,8 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/mysza/paymentsapi/domain"
+
+	"github.com/mysza/paymentsapi/utils"
 )
 
 // PaymentRepository defines database (or other storage medium) operations
@@ -38,11 +40,11 @@ func (rs *PaymentResource) router() *chi.Mux {
 
 func (rs *PaymentResource) getAll(w http.ResponseWriter, r *http.Request) {
 	payments := []*domain.Payment{
-		&domain.Payment{ID: uuid.New()},
-		&domain.Payment{ID: uuid.New()},
-		&domain.Payment{ID: uuid.New()},
-		&domain.Payment{ID: uuid.New()},
-		&domain.Payment{ID: uuid.New()},
+		&domain.Payment{ID: utils.NewUUID()},
+		&domain.Payment{ID: utils.NewUUID()},
+		&domain.Payment{ID: utils.NewUUID()},
+		&domain.Payment{ID: utils.NewUUID()},
+		&domain.Payment{ID: utils.NewUUID()},
 	}
 	response := newPaymentListResponse(payments)
 	render.Render(w, r, response)

@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/uuid"
+	"github.com/mysza/paymentsapi/utils"
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
@@ -17,8 +17,8 @@ func TestPaymentFieldsValidationRules(t *testing.T) {
 		{
 			description: "No error if all fields correct",
 			payment: Payment{
-				ID:             uuid.New(),
-				OrganisationID: uuid.New(),
+				ID:             utils.NewUUID(),
+				OrganisationID: utils.NewUUID(),
 				Attributes: PaymentAttributes{
 					Beneficiary: BeneficiaryPaymentParty{
 						PaymentParty: PaymentParty{
