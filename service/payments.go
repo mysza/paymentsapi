@@ -73,3 +73,14 @@ func (ps *PaymentsService) Get(id *uuid.UUID) (*domain.Payment, error) {
 	}
 	return ps.repo.Get(id)
 }
+
+// Delete deletes payment with given ID from the repository.
+func (ps *PaymentsService) Delete(id *uuid.UUID) error {
+	if id == nil {
+		return fmt.Errorf("Invalid ID")
+	}
+	if exists := ps.repo.Exists(id); !exists {
+		return fmt.Errorf("Payment with ID %v does not exist", id)
+	}
+	return ps.repo.Delete(id)
+}

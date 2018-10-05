@@ -564,3 +564,37 @@ func TestGetReturnsErrorIfInvalidIDPassed(t *testing.T) {
 		assert.Empty(retPayment)
 	})
 }
+
+func TestDeleteErrorIfInvalidID(t *testing.T) {
+	ps := NewPaymentsService(nil)
+	assert := assert.New(t)
+	t.Run("PaymentsService Delete returns error if invalid ID passed", func(t *testing.T) {
+		err := ps.Delete(nil)
+		assert.Error(err)
+	})
+}
+
+func TestDeleteErrorIfNotExists(t *testing.T) {
+	repo := new(mocks.PaymentsRepository)
+	id := utils.NewUUID()
+	repo.On("Exists", id).Return(false)
+	ps := NewPaymentsService(repo)
+	assert := assert.New(t)
+	t.Run("PaymentsService Delete returns error if payment with given ID does not exist", func(t *testing.T) {
+		err := ps.Delete(id)
+		assert.Error(err)
+	})
+}
+
+func TestDeleteDeletesWhenInputValid(t *testing.T) {
+	repo := new(mocks.PaymentsRepository)
+	id := utils.NewUUID()
+	repo.On("Exists", id).Return(true)
+	repo.On("Delete", id).Return(nil)
+	ps := NewPaymentsService(repo)
+	assert := assert.New(t)
+	t.Run("PaymentsService Delete returns error if payment with given ID does not exist", func(t *testing.T) {
+		err := ps.Delete(id)
+		assert.Empty(err)
+	})
+}
