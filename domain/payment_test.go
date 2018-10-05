@@ -85,7 +85,7 @@ func TestPaymentFieldsValidationRules(t *testing.T) {
 	validator := validator.New()
 	for _, scenario := range scenarios {
 		t.Run(scenario.description, func(t *testing.T) {
-			if err := validator.Struct(scenario.payment); !scenario.passed(err) {
+			if err := scenario.payment.Validate(validator); !scenario.passed(err) {
 				t.Errorf("Validation is defined inproperly: %s", err)
 			}
 		})

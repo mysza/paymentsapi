@@ -49,7 +49,7 @@ func TestAccountFieldsValidationRules(t *testing.T) {
 	validator := validator.New()
 	for _, scenario := range scenarios {
 		t.Run(scenario.description, func(t *testing.T) {
-			if err := validator.Struct(scenario.account); !scenario.passed(err) {
+			if err := scenario.account.Validate(validator); !scenario.passed(err) {
 				t.Errorf("Validation is defined inproperly: %s", err)
 			}
 		})
@@ -152,7 +152,7 @@ func TestPaymentPartyFieldsValidationRules(t *testing.T) {
 	validator := validator.New()
 	for _, scenario := range scenarios {
 		t.Run(scenario.description, func(t *testing.T) {
-			if err := validator.Struct(scenario.party); !scenario.passed(err) {
+			if err := scenario.party.Validate(validator); !scenario.passed(err) {
 				t.Errorf("Validation is defined inproperly: %s", err)
 			}
 		})
@@ -205,7 +205,7 @@ func TestBeneficiaryPaymentPartyFieldsValidationRules(t *testing.T) {
 	validator := validator.New()
 	for _, scenario := range scenarios {
 		t.Run(scenario.description, func(t *testing.T) {
-			if err := validator.Struct(scenario.party); !scenario.passed(err) {
+			if err := scenario.party.Validate(validator); !scenario.passed(err) {
 				t.Errorf("Validation is defined inproperly: %s", err)
 			}
 		})

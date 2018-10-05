@@ -112,7 +112,7 @@ func TestFXFieldsValidationRules(t *testing.T) {
 	validator := validator.New()
 	for _, scenario := range scenarios {
 		t.Run(scenario.description, func(t *testing.T) {
-			if err := validator.Struct(scenario.fx); !scenario.passed(err) {
+			if err := scenario.fx.Validate(validator); !scenario.passed(err) {
 				t.Errorf("Validation is defined inproperly: %s", err)
 			}
 		})

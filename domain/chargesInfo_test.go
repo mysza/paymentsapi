@@ -127,7 +127,7 @@ func TestChargesInfoFieldsValidationRules(t *testing.T) {
 	validator := validator.New()
 	for _, scenario := range scenarios {
 		t.Run(scenario.description, func(t *testing.T) {
-			if err := validator.Struct(scenario.chargesInfo); !scenario.passed(err) {
+			if err := scenario.chargesInfo.Validate(validator); !scenario.passed(err) {
 				t.Errorf("Validation is defined inproperly: %s", err)
 			}
 		})
