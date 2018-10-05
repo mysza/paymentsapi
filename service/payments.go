@@ -32,9 +32,15 @@ func NewPaymentsService(repo PaymentsRepository) *PaymentsService {
 }
 
 // Add adds a new payment to the service.
+// Before that, it validates the argument.
 func (ps *PaymentsService) Add(payment *domain.Payment) (string, error) {
 	if err := payment.Validate(ps.validator); err != nil {
 		return "", err
 	}
 	return ps.repo.Add(payment)
+}
+
+// GetAll simply returns all payments from the repository.
+func (ps *PaymentsService) GetAll() ([]*domain.Payment, error) {
+	return ps.repo.GetAll()
 }
