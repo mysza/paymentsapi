@@ -37,7 +37,11 @@ build:
 	CGO_ENABLED=0 GOOS=$(GOOS) GOARCH=${GOARCH} go build -a -installsuffix cgo -o ./$(BUILD_DIR)/$(OUTPUT)$(EXT) $(ENTRYPOINT)
 
 test:
-	go test --cover -v ./...
+	go test ./...
+
+testcover:
+	go test -coverprofile=coverage.out ./...
+	go tool cover -html=coverage.out
 
 run:
 	./$(BUILD_DIR)/$(OUTPUT)$(EXT)
