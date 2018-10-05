@@ -41,11 +41,11 @@ func NewPaymentsService(repo PaymentsRepository) *PaymentsService {
 func (ps *PaymentsService) Add(payment *domain.Payment) (string, error) {
 	// check if ID is set
 	if payment.ID != nil {
-		return "", fmt.Errorf("Payment cannot have ID set when adding to repository")
+		return "", NewInputError("Payment cannot have ID set when adding to repository")
 	}
 	payment.ID = utils.NewUUID()
 	if err := payment.Validate(ps.validator); err != nil {
-		return "", err
+		return "", NewInputError(err.Error())
 	}
 	return ps.repo.Add(payment)
 }
@@ -58,10 +58,10 @@ func (ps *PaymentsService) GetAll() ([]*domain.Payment, error) {
 // Update updates existing payment.
 func (ps *PaymentsService) Update(payment *domain.Payment) error {
 	if err := payment.Validate(ps.validator); err != nil {
-		return err
+		return NewInputError(err.Error())
 	}
 	if exists := ps.repo.Exists(payment.ID); !exists {
-		return fmt.Errorf("Payment with ID: %v does not exist", payment.ID)
+		return NewNotFoundError(fmt.Sprintf("Payment with ID: %v does not exist", payment.ID))
 	}
 	return ps.repo.Update(payment)
 }
@@ -69,7 +69,7 @@ func (ps *PaymentsService) Update(payment *domain.Payment) error {
 // Get retrieves a single Payment based on ID
 func (ps *PaymentsService) Get(id *uuid.UUID) (*domain.Payment, error) {
 	if id == nil {
-		return nil, fmt.Errorf("Invalid ID")
+		return nil, NewInputError("Invalid ID")
 	}
 	return ps.repo.Get(id)
 }
@@ -77,10 +77,10 @@ func (ps *PaymentsService) Get(id *uuid.UUID) (*domain.Payment, error) {
 // Delete deletes payment with given ID from the repository.
 func (ps *PaymentsService) Delete(id *uuid.UUID) error {
 	if id == nil {
-		return fmt.Errorf("Invalid ID")
+		return NewInputError("Invalid ID")
 	}
 	if exists := ps.repo.Exists(id); !exists {
-		return fmt.Errorf("Payment with ID %v does not exist", id)
+		return NewNotFoundError(fmt.Sprintf("Payment with ID %v does not exist", id))
 	}
 	return ps.repo.Delete(id)
 }
