@@ -32,5 +32,5 @@ func (ps *PaymentsService) Add(payment *domain.Payment) (string, error) {
 	if err := payment.Validate(ps.validator); err != nil {
 		return "", err
 	}
-	return "", nil
+	return ps.repo.Add(payment)
 }
