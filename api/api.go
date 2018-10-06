@@ -5,30 +5,31 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/render"
 )
 
 // API provides the application HTTP API
 type API struct {
-	// API resources needed to work
-	Payments *PaymentResource
+	payments *PaymentResource
+	router   *chi.Mux
 }
 
 // NewAPI creates a new API instance
-func NewAPI( /* inject deps */ ) (*API, error) {
+func NewAPI() (*API, error) {
 	payments := NewPaymentResource(nil)
-	return &API{
-		Payments: payments,
-	}, nil
+	router := chi.NewRouter()
+	router.Use(middleware.Recoverer)
+	router.Use(middleware.RequestID)
+	router.Use(middleware.DefaultCompress)
+	router.Use(middleware.Timeout(15 * time.Second))
+	router.Use(middleware.DefaultCompress)
+	router.Use(middleware.Logger)
+	router.Use(render.SetContentType(render.ContentTypeJSON))
+	router.Mount("/payments", payments.router())
+	return &API{payments, router}, nil
 }
 
 // Router provides API routes.
 func (api *API) Router() *chi.Mux {
-	r := chi.NewRouter()
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.RequestID)
-	r.Use(middleware.DefaultCompress)
-	r.Use(middleware.Timeout(15 * time.Second))
-	r.Use(middleware.DefaultCompress)
-	r.Mount("/payments", api.Payments.router())
-	return r
+	return api.router
 }

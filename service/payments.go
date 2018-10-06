@@ -5,7 +5,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/mysza/paymentsapi/domain"
-	"github.com/mysza/paymentsapi/utils"
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
@@ -43,7 +42,6 @@ func (ps *PaymentsService) Add(payment *domain.Payment) (string, error) {
 	if payment.ID != nil {
 		return "", NewInputError("Payment cannot have ID set when adding to repository")
 	}
-	payment.ID = utils.NewUUID()
 	if err := payment.Validate(ps.validator); err != nil {
 		return "", NewInputError(err.Error())
 	}

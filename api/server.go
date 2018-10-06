@@ -14,12 +14,12 @@ type Server struct {
 }
 
 // NewServer creates and configures a new API server for all application routes.
-func NewServer() (*Server, error) {
+func NewServer(address string) (*Server, error) {
 	api, err := NewAPI()
 	if err != nil {
 		return nil, err
 	}
-	srv := http.Server{Addr: ":8080", Handler: api.Router()}
+	srv := http.Server{Addr: address, Handler: api.Router()}
 	return &Server{&srv}, nil
 }
 

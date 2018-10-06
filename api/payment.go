@@ -8,28 +8,20 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/mysza/paymentsapi/domain"
+	"github.com/mysza/paymentsapi/service"
 
 	"github.com/mysza/paymentsapi/utils"
 )
 
-// PaymentRepository defines database (or other storage medium) operations
-// on a payment
-type PaymentRepository interface {
-	GetAll() (*[]domain.Payment, error)
-	Get(id string) (*domain.Payment, error)
-	Create( /* define input */ ) (string, error) // returns id
-	Update(payment *domain.Payment) error
-	Delete(id string) error
-}
-
 // PaymentResource implements payments management handler
 type PaymentResource struct {
-	Store PaymentRepository
+	service *service.PaymentsService
 }
 
 // NewPaymentResource creates and returns a payments resource.
-func NewPaymentResource(repo PaymentRepository) *PaymentResource {
-	return &PaymentResource{Store: repo}
+func NewPaymentResource(repo service.PaymentsRepository) *PaymentResource {
+	service := service.NewPaymentsService(repo)
+	return &PaymentResource{service}
 }
 
 func (rs *PaymentResource) router() *chi.Mux {

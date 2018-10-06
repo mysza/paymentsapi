@@ -14,7 +14,7 @@ var serveCmd = &cobra.Command{
 	Short: "start http server with configured api",
 	Long:  `Starts a http server and serves the configured api`,
 	Run: func(cmd *cobra.Command, args []string) {
-		server, err := api.NewServer()
+		server, err := api.NewServer(viper.GetString("address"))
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -24,8 +24,5 @@ var serveCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(serveCmd)
-
-	// Here you will define your flags and configuration settings.
-	viper.SetDefault("port", "localhost:3000")
-	viper.SetDefault("log_level", "debug")
+	viper.SetDefault("address", "localhost:3000")
 }
