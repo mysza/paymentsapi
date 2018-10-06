@@ -75,7 +75,14 @@ func (rs *PaymentResource) update(w http.ResponseWriter, r *http.Request) {
 	}
 	err := rs.service.Update(input.Payment)
 	if err != nil {
-		render.Render(w, r, ErrBadRequest)
+		switch err.(type) {
+		case *service.InputError:
+			render.Render(w, r, ErrBadRequest)
+		case *service.NotFoundError:
+			render.Render(w, r, ErrNotFound)
+		default:
+			render.Render(w, r, ErrInternalServerError)
+		}
 	}
 	render.NoContent(w, r)
 }
