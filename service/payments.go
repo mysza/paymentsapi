@@ -3,7 +3,6 @@ package service
 import (
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/mysza/paymentsapi/domain"
 	validator "gopkg.in/go-playground/validator.v9"
 )
@@ -15,9 +14,9 @@ type PaymentsRepository interface {
 	Add(*domain.Payment) (string, error)
 	GetAll() ([]*domain.Payment, error)
 	Update(*domain.Payment) error
-	Get(*uuid.UUID) (*domain.Payment, error)
-	Delete(*uuid.UUID) error
-	Exists(*uuid.UUID) bool
+	Get(string) (*domain.Payment, error)
+	Delete(string) error
+	Exists(string) bool
 }
 
 // PaymentsService implements all use cases of the Payments API.
@@ -39,7 +38,7 @@ func NewPaymentsService(repo PaymentsRepository) *PaymentsService {
 // Before that, it validates the argument.
 func (ps *PaymentsService) Add(payment *domain.Payment) (string, error) {
 	// check if ID is set
-	if payment.ID != nil {
+	if payment.ID != "" {
 		return "", NewInputError("Payment cannot have ID set when adding to repository")
 	}
 	if err := payment.Validate(ps.validator); err != nil {
@@ -65,16 +64,20 @@ func (ps *PaymentsService) Update(payment *domain.Payment) error {
 }
 
 // Get retrieves a single Payment based on ID
-func (ps *PaymentsService) Get(id *uuid.UUID) (*domain.Payment, error) {
-	if id == nil {
+func (ps *PaymentsService) Get(id string) (*domain.Payment, error) {
+	if id == "" {
 		return nil, NewInputError("Invalid ID")
 	}
-	return ps.repo.Get(id)
+	payment, err := ps.repo.Get(id)
+	if err != nil {
+		return nil, NewNotFoundError(fmt.Sprintf("Payment with id %v not found", id))
+	}
+	return payment, nil
 }
 
 // Delete deletes payment with given ID from the repository.
-func (ps *PaymentsService) Delete(id *uuid.UUID) error {
-	if id == nil {
+func (ps *PaymentsService) Delete(id string) error {
+	if id == "" {
 		return NewInputError("Invalid ID")
 	}
 	if exists := ps.repo.Exists(id); !exists {

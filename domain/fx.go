@@ -4,6 +4,7 @@ import validator "gopkg.in/go-playground/validator.v9"
 
 // FX represents information about exchange rate in payment
 type FX struct {
+	ID                uint   `json:"-"`
 	ContractReference string `json:"contract_reference" validate:"required,alphanum"`
 	ExchangeRate      string `json:"exchange_rate" validate:"required,numeric"`
 	OriginalAmount    string `json:"original_amount" validate:"required,numeric"`

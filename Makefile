@@ -34,7 +34,7 @@ vet:
 	go vet ./...
 
 build:
-	CGO_ENABLED=0 GOOS=$(GOOS) GOARCH=${GOARCH} go build -a -installsuffix cgo -o ./$(BUILD_DIR)/$(OUTPUT)$(EXT) $(ENTRYPOINT)
+	CGO_ENABLED=1 GOOS=$(GOOS) GOARCH=${GOARCH} go build -o ./$(BUILD_DIR)/$(OUTPUT)$(EXT) $(ENTRYPOINT)
 
 test:
 	go test ./...

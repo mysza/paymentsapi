@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/mysza/paymentsapi/domain"
 	"github.com/mysza/paymentsapi/service/mocks"
-	"github.com/mysza/paymentsapi/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,7 +14,7 @@ func TestAddReturnsErrorOnInvalidInput(t *testing.T) {
 	t.Run("PaymentsService Add returns error if invalid input passed", func(t *testing.T) {
 		ps := NewPaymentsService(nil)
 		payment := &domain.Payment{
-			OrganisationID: utils.NewUUID(),
+			OrganisationID: uuid.New().String(),
 		}
 		if _, err := ps.Add(payment); err == nil {
 			t.Error("Payments service didn't return error despite invalid input to Add")
@@ -24,11 +24,11 @@ func TestAddReturnsErrorOnInvalidInput(t *testing.T) {
 
 func TestAddReturnsPaymentIDOnValidInput(t *testing.T) {
 	payment := &domain.Payment{
-		OrganisationID: utils.NewUUID(),
-		Attributes: domain.PaymentAttributes{
-			Beneficiary: domain.BeneficiaryPaymentParty{
-				PaymentParty: domain.PaymentParty{
-					Account: domain.Account{
+		OrganisationID: uuid.New().String(),
+		Attributes: &domain.PaymentAttributes{
+			Beneficiary: &domain.BeneficiaryPaymentParty{
+				PaymentParty: &domain.PaymentParty{
+					Account: &domain.Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -40,8 +40,8 @@ func TestAddReturnsPaymentIDOnValidInput(t *testing.T) {
 				},
 				AccountType: 0,
 			},
-			Debtor: domain.PaymentParty{
-				Account: domain.Account{
+			Debtor: &domain.PaymentParty{
+				Account: &domain.Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -51,21 +51,21 @@ func TestAddReturnsPaymentIDOnValidInput(t *testing.T) {
 				Address:           "10 Debtor Crescent Sourcetown NE1",
 				Name:              "EJ Brown Black",
 			},
-			Sponsor: domain.Account{
+			Sponsor: &domain.Account{
 				AccountNumber: "56781234",
 				BankID:        "123123",
 				BankIDCode:    "GBDSC",
 			},
-			ChargesInformation: domain.ChargesInformation{
+			ChargesInformation: &domain.ChargesInformation{
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges: []domain.Charge{
-					domain.Charge{Currency: "USD", Amount: "5.00"},
-					domain.Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []*domain.Charge{
+					&domain.Charge{Currency: "USD", Amount: "5.00"},
+					&domain.Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
-			FX: domain.FX{
+			FX: &domain.FX{
 				ContractReference: "FX123",
 				ExchangeRate:      "2.00",
 				OriginalAmount:    "100.12",
@@ -99,12 +99,12 @@ func TestAddReturnsPaymentIDOnValidInput(t *testing.T) {
 
 func TestAddReturnsErrorIfIDSet(t *testing.T) {
 	payment := &domain.Payment{
-		ID:             utils.NewUUID(),
-		OrganisationID: utils.NewUUID(),
-		Attributes: domain.PaymentAttributes{
-			Beneficiary: domain.BeneficiaryPaymentParty{
-				PaymentParty: domain.PaymentParty{
-					Account: domain.Account{
+		ID:             uuid.New().String(),
+		OrganisationID: uuid.New().String(),
+		Attributes: &domain.PaymentAttributes{
+			Beneficiary: &domain.BeneficiaryPaymentParty{
+				PaymentParty: &domain.PaymentParty{
+					Account: &domain.Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -116,8 +116,8 @@ func TestAddReturnsErrorIfIDSet(t *testing.T) {
 				},
 				AccountType: 0,
 			},
-			Debtor: domain.PaymentParty{
-				Account: domain.Account{
+			Debtor: &domain.PaymentParty{
+				Account: &domain.Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -127,21 +127,21 @@ func TestAddReturnsErrorIfIDSet(t *testing.T) {
 				Address:           "10 Debtor Crescent Sourcetown NE1",
 				Name:              "EJ Brown Black",
 			},
-			Sponsor: domain.Account{
+			Sponsor: &domain.Account{
 				AccountNumber: "56781234",
 				BankID:        "123123",
 				BankIDCode:    "GBDSC",
 			},
-			ChargesInformation: domain.ChargesInformation{
+			ChargesInformation: &domain.ChargesInformation{
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges: []domain.Charge{
-					domain.Charge{Currency: "USD", Amount: "5.00"},
-					domain.Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []*domain.Charge{
+					&domain.Charge{Currency: "USD", Amount: "5.00"},
+					&domain.Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
-			FX: domain.FX{
+			FX: &domain.FX{
 				ContractReference: "FX123",
 				ExchangeRate:      "2.00",
 				OriginalAmount:    "100.12",
@@ -175,12 +175,12 @@ func TestAddReturnsErrorIfIDSet(t *testing.T) {
 func TestGetAllReturnsAllPaymentsFromRepo(t *testing.T) {
 	payments := []*domain.Payment{
 		&domain.Payment{
-			ID:             utils.NewUUID(),
-			OrganisationID: utils.NewUUID(),
-			Attributes: domain.PaymentAttributes{
-				Beneficiary: domain.BeneficiaryPaymentParty{
-					PaymentParty: domain.PaymentParty{
-						Account: domain.Account{
+			ID:             uuid.New().String(),
+			OrganisationID: uuid.New().String(),
+			Attributes: &domain.PaymentAttributes{
+				Beneficiary: &domain.BeneficiaryPaymentParty{
+					PaymentParty: &domain.PaymentParty{
+						Account: &domain.Account{
 							AccountNumber: "56781234",
 							BankID:        "123123",
 							BankIDCode:    "GBDSC",
@@ -192,8 +192,8 @@ func TestGetAllReturnsAllPaymentsFromRepo(t *testing.T) {
 					},
 					AccountType: 0,
 				},
-				Debtor: domain.PaymentParty{
-					Account: domain.Account{
+				Debtor: &domain.PaymentParty{
+					Account: &domain.Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -203,21 +203,21 @@ func TestGetAllReturnsAllPaymentsFromRepo(t *testing.T) {
 					Address:           "10 Debtor Crescent Sourcetown NE1",
 					Name:              "EJ Brown Black",
 				},
-				Sponsor: domain.Account{
+				Sponsor: &domain.Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
 				},
-				ChargesInformation: domain.ChargesInformation{
+				ChargesInformation: &domain.ChargesInformation{
 					BearerCode:              "SHAR",
 					ReceiverChargesAmount:   "100.12",
 					ReceiverChargesCurrency: "USD",
-					SenderCharges: []domain.Charge{
-						domain.Charge{Currency: "USD", Amount: "5.00"},
-						domain.Charge{Currency: "GBP", Amount: "15.00"},
+					SenderCharges: []*domain.Charge{
+						&domain.Charge{Currency: "USD", Amount: "5.00"},
+						&domain.Charge{Currency: "GBP", Amount: "15.00"},
 					},
 				},
-				FX: domain.FX{
+				FX: &domain.FX{
 					ContractReference: "FX123",
 					ExchangeRate:      "2.00",
 					OriginalAmount:    "100.12",
@@ -238,12 +238,12 @@ func TestGetAllReturnsAllPaymentsFromRepo(t *testing.T) {
 			},
 		},
 		&domain.Payment{
-			ID:             utils.NewUUID(),
-			OrganisationID: utils.NewUUID(),
-			Attributes: domain.PaymentAttributes{
-				Beneficiary: domain.BeneficiaryPaymentParty{
-					PaymentParty: domain.PaymentParty{
-						Account: domain.Account{
+			ID:             uuid.New().String(),
+			OrganisationID: uuid.New().String(),
+			Attributes: &domain.PaymentAttributes{
+				Beneficiary: &domain.BeneficiaryPaymentParty{
+					PaymentParty: &domain.PaymentParty{
+						Account: &domain.Account{
 							AccountNumber: "56781234",
 							BankID:        "123123",
 							BankIDCode:    "GBDSC",
@@ -255,8 +255,8 @@ func TestGetAllReturnsAllPaymentsFromRepo(t *testing.T) {
 					},
 					AccountType: 0,
 				},
-				Debtor: domain.PaymentParty{
-					Account: domain.Account{
+				Debtor: &domain.PaymentParty{
+					Account: &domain.Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -266,21 +266,21 @@ func TestGetAllReturnsAllPaymentsFromRepo(t *testing.T) {
 					Address:           "10 Debtor Crescent Sourcetown NE1",
 					Name:              "EJ Brown Black",
 				},
-				Sponsor: domain.Account{
+				Sponsor: &domain.Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
 				},
-				ChargesInformation: domain.ChargesInformation{
+				ChargesInformation: &domain.ChargesInformation{
 					BearerCode:              "SHAR",
 					ReceiverChargesAmount:   "100.12",
 					ReceiverChargesCurrency: "USD",
-					SenderCharges: []domain.Charge{
-						domain.Charge{Currency: "USD", Amount: "5.00"},
-						domain.Charge{Currency: "GBP", Amount: "15.00"},
+					SenderCharges: []*domain.Charge{
+						&domain.Charge{Currency: "USD", Amount: "5.00"},
+						&domain.Charge{Currency: "GBP", Amount: "15.00"},
 					},
 				},
-				FX: domain.FX{
+				FX: &domain.FX{
 					ContractReference: "FX123",
 					ExchangeRate:      "2.00",
 					OriginalAmount:    "100.12",
@@ -317,8 +317,8 @@ func TestUpdateReturnsErrorOnInvalidInput(t *testing.T) {
 	t.Run("PaymentsService Update returns error if invalid input passed", func(t *testing.T) {
 		ps := NewPaymentsService(nil)
 		payment := &domain.Payment{
-			ID:             utils.NewUUID(),
-			OrganisationID: utils.NewUUID(),
+			ID:             uuid.New().String(),
+			OrganisationID: uuid.New().String(),
 		}
 		if err := ps.Update(payment); err == nil {
 			t.Error("Payments service didn't return error despite invalid input to Update")
@@ -327,14 +327,14 @@ func TestUpdateReturnsErrorOnInvalidInput(t *testing.T) {
 }
 
 func TestUpdateReturnsErrorIfPaymentWithGiveIDDoesNotExist(t *testing.T) {
-	paymentID := utils.NewUUID()
+	paymentID := uuid.New().String()
 	payment := &domain.Payment{
 		ID:             paymentID,
-		OrganisationID: utils.NewUUID(),
-		Attributes: domain.PaymentAttributes{
-			Beneficiary: domain.BeneficiaryPaymentParty{
-				PaymentParty: domain.PaymentParty{
-					Account: domain.Account{
+		OrganisationID: uuid.New().String(),
+		Attributes: &domain.PaymentAttributes{
+			Beneficiary: &domain.BeneficiaryPaymentParty{
+				PaymentParty: &domain.PaymentParty{
+					Account: &domain.Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -346,8 +346,8 @@ func TestUpdateReturnsErrorIfPaymentWithGiveIDDoesNotExist(t *testing.T) {
 				},
 				AccountType: 0,
 			},
-			Debtor: domain.PaymentParty{
-				Account: domain.Account{
+			Debtor: &domain.PaymentParty{
+				Account: &domain.Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -357,21 +357,21 @@ func TestUpdateReturnsErrorIfPaymentWithGiveIDDoesNotExist(t *testing.T) {
 				Address:           "10 Debtor Crescent Sourcetown NE1",
 				Name:              "EJ Brown Black",
 			},
-			Sponsor: domain.Account{
+			Sponsor: &domain.Account{
 				AccountNumber: "56781234",
 				BankID:        "123123",
 				BankIDCode:    "GBDSC",
 			},
-			ChargesInformation: domain.ChargesInformation{
+			ChargesInformation: &domain.ChargesInformation{
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges: []domain.Charge{
-					domain.Charge{Currency: "USD", Amount: "5.00"},
-					domain.Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []*domain.Charge{
+					&domain.Charge{Currency: "USD", Amount: "5.00"},
+					&domain.Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
-			FX: domain.FX{
+			FX: &domain.FX{
 				ContractReference: "FX123",
 				ExchangeRate:      "2.00",
 				OriginalAmount:    "100.12",
@@ -404,12 +404,12 @@ func TestUpdateReturnsErrorIfPaymentWithGiveIDDoesNotExist(t *testing.T) {
 
 func TestUpdateReturnsNilOnValidInput(t *testing.T) {
 	payment := &domain.Payment{
-		ID:             utils.NewUUID(),
-		OrganisationID: utils.NewUUID(),
-		Attributes: domain.PaymentAttributes{
-			Beneficiary: domain.BeneficiaryPaymentParty{
-				PaymentParty: domain.PaymentParty{
-					Account: domain.Account{
+		ID:             uuid.New().String(),
+		OrganisationID: uuid.New().String(),
+		Attributes: &domain.PaymentAttributes{
+			Beneficiary: &domain.BeneficiaryPaymentParty{
+				PaymentParty: &domain.PaymentParty{
+					Account: &domain.Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -421,8 +421,8 @@ func TestUpdateReturnsNilOnValidInput(t *testing.T) {
 				},
 				AccountType: 0,
 			},
-			Debtor: domain.PaymentParty{
-				Account: domain.Account{
+			Debtor: &domain.PaymentParty{
+				Account: &domain.Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -432,21 +432,21 @@ func TestUpdateReturnsNilOnValidInput(t *testing.T) {
 				Address:           "10 Debtor Crescent Sourcetown NE1",
 				Name:              "EJ Brown Black",
 			},
-			Sponsor: domain.Account{
+			Sponsor: &domain.Account{
 				AccountNumber: "56781234",
 				BankID:        "123123",
 				BankIDCode:    "GBDSC",
 			},
-			ChargesInformation: domain.ChargesInformation{
+			ChargesInformation: &domain.ChargesInformation{
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges: []domain.Charge{
-					domain.Charge{Currency: "USD", Amount: "5.00"},
-					domain.Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []*domain.Charge{
+					&domain.Charge{Currency: "USD", Amount: "5.00"},
+					&domain.Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
-			FX: domain.FX{
+			FX: &domain.FX{
 				ContractReference: "FX123",
 				ExchangeRate:      "2.00",
 				OriginalAmount:    "100.12",
@@ -479,14 +479,14 @@ func TestUpdateReturnsNilOnValidInput(t *testing.T) {
 }
 
 func TestGetReturnsPaymentIfExistingIDPassed(t *testing.T) {
-	id := utils.NewUUID()
+	id := uuid.New().String()
 	payment := &domain.Payment{
 		ID:             id,
-		OrganisationID: utils.NewUUID(),
-		Attributes: domain.PaymentAttributes{
-			Beneficiary: domain.BeneficiaryPaymentParty{
-				PaymentParty: domain.PaymentParty{
-					Account: domain.Account{
+		OrganisationID: uuid.New().String(),
+		Attributes: &domain.PaymentAttributes{
+			Beneficiary: &domain.BeneficiaryPaymentParty{
+				PaymentParty: &domain.PaymentParty{
+					Account: &domain.Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -498,8 +498,8 @@ func TestGetReturnsPaymentIfExistingIDPassed(t *testing.T) {
 				},
 				AccountType: 0,
 			},
-			Debtor: domain.PaymentParty{
-				Account: domain.Account{
+			Debtor: &domain.PaymentParty{
+				Account: &domain.Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -509,21 +509,21 @@ func TestGetReturnsPaymentIfExistingIDPassed(t *testing.T) {
 				Address:           "10 Debtor Crescent Sourcetown NE1",
 				Name:              "EJ Brown Black",
 			},
-			Sponsor: domain.Account{
+			Sponsor: &domain.Account{
 				AccountNumber: "56781234",
 				BankID:        "123123",
 				BankIDCode:    "GBDSC",
 			},
-			ChargesInformation: domain.ChargesInformation{
+			ChargesInformation: &domain.ChargesInformation{
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges: []domain.Charge{
-					domain.Charge{Currency: "USD", Amount: "5.00"},
-					domain.Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []*domain.Charge{
+					&domain.Charge{Currency: "USD", Amount: "5.00"},
+					&domain.Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
-			FX: domain.FX{
+			FX: &domain.FX{
 				ContractReference: "FX123",
 				ExchangeRate:      "2.00",
 				OriginalAmount:    "100.12",
@@ -559,7 +559,7 @@ func TestGetReturnsErrorIfInvalidIDPassed(t *testing.T) {
 	ps := NewPaymentsService(nil)
 	assert := assert.New(t)
 	t.Run("PaymentsService Get returns error if invalid ID passed", func(t *testing.T) {
-		retPayment, err := ps.Get(nil)
+		retPayment, err := ps.Get("")
 		assert.Error(err)
 		assert.Empty(retPayment)
 	})
@@ -569,14 +569,14 @@ func TestDeleteErrorIfInvalidID(t *testing.T) {
 	ps := NewPaymentsService(nil)
 	assert := assert.New(t)
 	t.Run("PaymentsService Delete returns error if invalid ID passed", func(t *testing.T) {
-		err := ps.Delete(nil)
+		err := ps.Delete("")
 		assert.Error(err)
 	})
 }
 
 func TestDeleteErrorIfNotExists(t *testing.T) {
 	repo := new(mocks.PaymentsRepository)
-	id := utils.NewUUID()
+	id := uuid.New().String()
 	repo.On("Exists", id).Return(false)
 	ps := NewPaymentsService(repo)
 	assert := assert.New(t)
@@ -588,7 +588,7 @@ func TestDeleteErrorIfNotExists(t *testing.T) {
 
 func TestDeleteDeletesWhenInputValid(t *testing.T) {
 	repo := new(mocks.PaymentsRepository)
-	id := utils.NewUUID()
+	id := uuid.New().String()
 	repo.On("Exists", id).Return(true)
 	repo.On("Delete", id).Return(nil)
 	ps := NewPaymentsService(repo)

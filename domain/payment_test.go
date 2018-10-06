@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mysza/paymentsapi/utils"
+	"github.com/google/uuid"
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
@@ -17,12 +17,12 @@ func TestPaymentFieldsValidationRules(t *testing.T) {
 		{
 			description: "No error if all fields correct",
 			payment: Payment{
-				ID:             utils.NewUUID(),
-				OrganisationID: utils.NewUUID(),
-				Attributes: PaymentAttributes{
-					Beneficiary: BeneficiaryPaymentParty{
-						PaymentParty: PaymentParty{
-							Account: Account{
+				ID:             uuid.New().String(),
+				OrganisationID: uuid.New().String(),
+				Attributes: &PaymentAttributes{
+					Beneficiary: &BeneficiaryPaymentParty{
+						PaymentParty: &PaymentParty{
+							Account: &Account{
 								AccountNumber: "56781234",
 								BankID:        "123123",
 								BankIDCode:    "GBDSC",
@@ -34,8 +34,8 @@ func TestPaymentFieldsValidationRules(t *testing.T) {
 						},
 						AccountType: 0,
 					},
-					Debtor: PaymentParty{
-						Account: Account{
+					Debtor: &PaymentParty{
+						Account: &Account{
 							AccountNumber: "56781234",
 							BankID:        "123123",
 							BankIDCode:    "GBDSC",
@@ -45,21 +45,21 @@ func TestPaymentFieldsValidationRules(t *testing.T) {
 						Address:           "10 Debtor Crescent Sourcetown NE1",
 						Name:              "EJ Brown Black",
 					},
-					Sponsor: Account{
+					Sponsor: &Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
 					},
-					ChargesInformation: ChargesInformation{
+					ChargesInformation: &ChargesInformation{
 						BearerCode:              "SHAR",
 						ReceiverChargesAmount:   "100.12",
 						ReceiverChargesCurrency: "USD",
-						SenderCharges: []Charge{
-							Charge{Currency: "USD", Amount: "5.00"},
-							Charge{Currency: "GBP", Amount: "15.00"},
+						SenderCharges: []*Charge{
+							&Charge{Currency: "USD", Amount: "5.00"},
+							&Charge{Currency: "GBP", Amount: "15.00"},
 						},
 					},
-					FX: FX{
+					FX: &FX{
 						ContractReference: "FX123",
 						ExchangeRate:      "2.00",
 						OriginalAmount:    "100.12",

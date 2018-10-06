@@ -18,9 +18,9 @@ func TestChargesInfoFieldsValidationRules(t *testing.T) {
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges: []Charge{
-					Charge{Currency: "USD", Amount: "5.00"},
-					Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []*Charge{
+					&Charge{Currency: "USD", Amount: "5.00"},
+					&Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
 			passed: func(err error) bool { return err == nil },
@@ -31,9 +31,9 @@ func TestChargesInfoFieldsValidationRules(t *testing.T) {
 				BearerCode:              "",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges: []Charge{
-					Charge{Currency: "USD", Amount: "5.00"},
-					Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []*Charge{
+					&Charge{Currency: "USD", Amount: "5.00"},
+					&Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
 			passed: func(err error) bool { return err != nil },
@@ -44,9 +44,9 @@ func TestChargesInfoFieldsValidationRules(t *testing.T) {
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges: []Charge{
-					Charge{Currency: "USD", Amount: "5.00"},
-					Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []*Charge{
+					&Charge{Currency: "USD", Amount: "5.00"},
+					&Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
 			passed: func(err error) bool { return err != nil },
@@ -57,9 +57,9 @@ func TestChargesInfoFieldsValidationRules(t *testing.T) {
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "abc",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges: []Charge{
-					Charge{Currency: "USD", Amount: "5.00"},
-					Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []*Charge{
+					&Charge{Currency: "USD", Amount: "5.00"},
+					&Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
 			passed: func(err error) bool { return err != nil },
@@ -70,9 +70,9 @@ func TestChargesInfoFieldsValidationRules(t *testing.T) {
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "",
-				SenderCharges: []Charge{
-					Charge{Currency: "USD", Amount: "5.00"},
-					Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []*Charge{
+					&Charge{Currency: "USD", Amount: "5.00"},
+					&Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
 			passed: func(err error) bool { return err != nil },
@@ -83,9 +83,9 @@ func TestChargesInfoFieldsValidationRules(t *testing.T) {
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "US",
-				SenderCharges: []Charge{
-					Charge{Currency: "USD", Amount: "5.00"},
-					Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []*Charge{
+					&Charge{Currency: "USD", Amount: "5.00"},
+					&Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
 			passed: func(err error) bool { return err != nil },
@@ -96,9 +96,9 @@ func TestChargesInfoFieldsValidationRules(t *testing.T) {
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "US3",
-				SenderCharges: []Charge{
-					Charge{Currency: "USD", Amount: "5.00"},
-					Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []*Charge{
+					&Charge{Currency: "USD", Amount: "5.00"},
+					&Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
 			passed: func(err error) bool { return err != nil },
@@ -109,7 +109,7 @@ func TestChargesInfoFieldsValidationRules(t *testing.T) {
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges:           []Charge{},
+				SenderCharges:           []*Charge{},
 			},
 			passed: func(err error) bool { return err == nil },
 		},
@@ -119,7 +119,7 @@ func TestChargesInfoFieldsValidationRules(t *testing.T) {
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "US3",
-				SenderCharges:           []Charge{Charge{}},
+				SenderCharges:           []*Charge{&Charge{}},
 			},
 			passed: func(err error) bool { return err != nil },
 		},

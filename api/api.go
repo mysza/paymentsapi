@@ -3,6 +3,10 @@ package api
 import (
 	"time"
 
+	"github.com/jinzhu/gorm"
+
+	"github.com/mysza/paymentsapi/repository"
+
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
@@ -15,8 +19,9 @@ type API struct {
 }
 
 // NewAPI creates a new API instance
-func NewAPI() (*API, error) {
-	payments := NewPaymentResource(nil)
+func NewAPI(db *gorm.DB) (*API, error) {
+	repo := repository.New(db)
+	payments := NewPaymentResource(repo)
 	router := chi.NewRouter()
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.RequestID)

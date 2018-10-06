@@ -10,15 +10,15 @@ import (
 func TestPaymentAttributesFieldsValidationRules(t *testing.T) {
 	var scenarios = []struct {
 		description string
-		attributes  PaymentAttributes
+		attributes  *PaymentAttributes
 		passed      func(error) bool
 	}{
 		{
 			description: "No error if all fields correct",
-			attributes: PaymentAttributes{
-				Beneficiary: BeneficiaryPaymentParty{
-					PaymentParty: PaymentParty{
-						Account: Account{
+			attributes: &PaymentAttributes{
+				Beneficiary: &BeneficiaryPaymentParty{
+					PaymentParty: &PaymentParty{
+						Account: &Account{
 							AccountNumber: "56781234",
 							BankID:        "123123",
 							BankIDCode:    "GBDSC",
@@ -30,8 +30,8 @@ func TestPaymentAttributesFieldsValidationRules(t *testing.T) {
 					},
 					AccountType: 0,
 				},
-				Debtor: PaymentParty{
-					Account: Account{
+				Debtor: &PaymentParty{
+					Account: &Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -41,21 +41,21 @@ func TestPaymentAttributesFieldsValidationRules(t *testing.T) {
 					Address:           "10 Debtor Crescent Sourcetown NE1",
 					Name:              "EJ Brown Black",
 				},
-				Sponsor: Account{
+				Sponsor: &Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
 				},
-				ChargesInformation: ChargesInformation{
+				ChargesInformation: &ChargesInformation{
 					BearerCode:              "SHAR",
 					ReceiverChargesAmount:   "100.12",
 					ReceiverChargesCurrency: "USD",
-					SenderCharges: []Charge{
-						Charge{Currency: "USD", Amount: "5.00"},
-						Charge{Currency: "GBP", Amount: "15.00"},
+					SenderCharges: []*Charge{
+						&Charge{Currency: "USD", Amount: "5.00"},
+						&Charge{Currency: "GBP", Amount: "15.00"},
 					},
 				},
-				FX: FX{
+				FX: &FX{
 					ContractReference: "FX123",
 					ExchangeRate:      "2.00",
 					OriginalAmount:    "100.12",

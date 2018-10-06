@@ -9,12 +9,12 @@ import (
 func TestAccountFieldsValidationRules(t *testing.T) {
 	var scenarios = []struct {
 		description string
-		account     Account
+		account     *Account
 		passed      func(error) bool
 	}{
 		{
 			description: "No error if all fields correct",
-			account: Account{
+			account: &Account{
 				AccountNumber: "56781234",
 				BankID:        "123123",
 				BankIDCode:    "GBDSC",
@@ -23,7 +23,7 @@ func TestAccountFieldsValidationRules(t *testing.T) {
 		},
 		{
 			description: "Error if AccountNumber missing",
-			account: Account{
+			account: &Account{
 				BankID:     "123123",
 				BankIDCode: "GBDSC",
 			},
@@ -31,7 +31,7 @@ func TestAccountFieldsValidationRules(t *testing.T) {
 		},
 		{
 			description: "Error if BankID missing",
-			account: Account{
+			account: &Account{
 				AccountNumber: "56781234",
 				BankIDCode:    "GBDSC",
 			},
@@ -39,7 +39,7 @@ func TestAccountFieldsValidationRules(t *testing.T) {
 		},
 		{
 			description: "Error if BankIDCode missing",
-			account: Account{
+			account: &Account{
 				AccountNumber: "56781234",
 				BankID:        "123123",
 			},
@@ -59,13 +59,13 @@ func TestAccountFieldsValidationRules(t *testing.T) {
 func TestPaymentPartyFieldsValidationRules(t *testing.T) {
 	var scenarios = []struct {
 		description string
-		party       PaymentParty
+		party       *PaymentParty
 		passed      func(error) bool
 	}{
 		{
 			description: "No error if all fields correct",
-			party: PaymentParty{
-				Account: Account{
+			party: &PaymentParty{
+				Account: &Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -79,8 +79,8 @@ func TestPaymentPartyFieldsValidationRules(t *testing.T) {
 		},
 		{
 			description: "Error if AccountName missing",
-			party: PaymentParty{
-				Account: Account{
+			party: &PaymentParty{
+				Account: &Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -93,8 +93,8 @@ func TestPaymentPartyFieldsValidationRules(t *testing.T) {
 		},
 		{
 			description: "Error if AccountNumberCode missing",
-			party: PaymentParty{
-				Account: Account{
+			party: &PaymentParty{
+				Account: &Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -107,8 +107,8 @@ func TestPaymentPartyFieldsValidationRules(t *testing.T) {
 		},
 		{
 			description: "Error if AccountNumberCode other than from oneof set",
-			party: PaymentParty{
-				Account: Account{
+			party: &PaymentParty{
+				Account: &Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -122,8 +122,8 @@ func TestPaymentPartyFieldsValidationRules(t *testing.T) {
 		},
 		{
 			description: "Error if Address missing",
-			party: PaymentParty{
-				Account: Account{
+			party: &PaymentParty{
+				Account: &Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -136,8 +136,8 @@ func TestPaymentPartyFieldsValidationRules(t *testing.T) {
 		},
 		{
 			description: "Error if Name missing",
-			party: PaymentParty{
-				Account: Account{
+			party: &PaymentParty{
+				Account: &Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -162,14 +162,14 @@ func TestPaymentPartyFieldsValidationRules(t *testing.T) {
 func TestBeneficiaryPaymentPartyFieldsValidationRules(t *testing.T) {
 	var scenarios = []struct {
 		description string
-		party       BeneficiaryPaymentParty
+		party       *BeneficiaryPaymentParty
 		passed      func(error) bool
 	}{
 		{
 			description: "No error if all fields correct",
-			party: BeneficiaryPaymentParty{
-				PaymentParty: PaymentParty{
-					Account: Account{
+			party: &BeneficiaryPaymentParty{
+				PaymentParty: &PaymentParty{
+					Account: &Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -185,9 +185,9 @@ func TestBeneficiaryPaymentPartyFieldsValidationRules(t *testing.T) {
 		},
 		{
 			description: "Error if AccountType != 0",
-			party: BeneficiaryPaymentParty{
-				PaymentParty: PaymentParty{
-					Account: Account{
+			party: &BeneficiaryPaymentParty{
+				PaymentParty: &PaymentParty{
+					Account: &Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",

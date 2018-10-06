@@ -1,6 +1,8 @@
 package api
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -9,8 +11,12 @@ import (
 	"github.com/go-chi/render"
 	"github.com/mysza/paymentsapi/domain"
 	"github.com/mysza/paymentsapi/service"
+)
 
-	"github.com/mysza/paymentsapi/utils"
+type ctxKey int
+
+const (
+	ctxPaymentID ctxKey = iota
 )
 
 // PaymentResource implements payments management handler
@@ -27,49 +33,123 @@ func NewPaymentResource(repo service.PaymentsRepository) *PaymentResource {
 func (rs *PaymentResource) router() *chi.Mux {
 	r := chi.NewRouter()
 	r.Get("/", rs.getAll)
+	r.Post("/", rs.add)
+	r.Put("/", rs.update)
+	r.Route("/{paymentID}", func(r chi.Router) {
+		r.Use(rs.paymentCtx)
+		r.Get("/", rs.get)
+		r.Delete("/", rs.delete)
+	})
 	return r
 }
 
 func (rs *PaymentResource) getAll(w http.ResponseWriter, r *http.Request) {
-	payments := []*domain.Payment{
-		&domain.Payment{ID: utils.NewUUID()},
-		&domain.Payment{ID: utils.NewUUID()},
-		&domain.Payment{ID: utils.NewUUID()},
-		&domain.Payment{ID: utils.NewUUID()},
-		&domain.Payment{ID: utils.NewUUID()},
+	payments, err := rs.service.GetAll()
+	if err != nil {
+		render.Render(w, r, &ErrResponse{
+			Error:      err,
+			StatusCode: http.StatusInternalServerError,
+			StatusText: http.StatusText(http.StatusInternalServerError),
+		})
 	}
-	response := newPaymentListResponse(payments)
-	render.Render(w, r, response)
+	render.Respond(w, r, newPaymentListResponse(payments))
 }
 
-// PaymentResponse is the response payload for Payment data model.
-type PaymentResponse struct {
-	ID string `json:"id"`
+func (rs *PaymentResource) add(w http.ResponseWriter, r *http.Request) {
+	input := &paymentRequest{}
+	if err := render.Bind(r, input); err != nil {
+		render.Render(w, r, ErrBadRequest)
+	}
+	id, err := rs.service.Add(input.Payment)
+	if err != nil {
+		render.Render(w, r, ErrBadRequest)
+	}
+	w.Header().Set("Location", fmt.Sprintf("/payments/%v", id))
+	render.NoContent(w, r)
 }
 
-// Render implements the chi Renderer interface
-func (pr *PaymentResponse) Render(w http.ResponseWriter, r *http.Request) error {
+func (rs *PaymentResource) update(w http.ResponseWriter, r *http.Request) {
+	input := &paymentRequest{}
+	if err := render.Bind(r, input); err != nil {
+		render.Render(w, r, ErrBadRequest)
+	}
+	err := rs.service.Update(input.Payment)
+	if err != nil {
+		render.Render(w, r, ErrBadRequest)
+	}
+	render.NoContent(w, r)
+}
+
+func (rs *PaymentResource) paymentCtx(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		id, err := uuid.Parse(chi.URLParam(r, "paymentID"))
+		if err != nil {
+			render.Render(w, r, ErrBadRequest)
+		}
+		ctx := context.WithValue(r.Context(), ctxPaymentID, id)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
+
+func (rs *PaymentResource) get(w http.ResponseWriter, r *http.Request) {
+	id := r.Context().Value(ctxPaymentID).(string)
+	payment, err := rs.service.Get(id)
+	if err != nil {
+		switch err.(type) {
+		case *service.InputError:
+			render.Render(w, r, ErrBadRequest)
+		case *service.NotFoundError:
+			render.Render(w, r, ErrNotFound)
+		default:
+			render.Render(w, r, ErrInternalServerError)
+		}
+	}
+	render.Respond(w, r, newPaymentResponse(payment))
+}
+
+func (rs *PaymentResource) delete(w http.ResponseWriter, r *http.Request) {
+	id := r.Context().Value(ctxPaymentID).(string)
+	err := rs.service.Delete(id)
+	if err != nil {
+		switch err.(type) {
+		case *service.InputError:
+			render.Render(w, r, ErrBadRequest)
+		case *service.NotFoundError:
+			render.Render(w, r, ErrNotFound)
+		default:
+			render.Render(w, r, ErrInternalServerError)
+		}
+	}
+	render.NoContent(w, r)
+}
+
+type paymentRequest struct {
+	*domain.Payment
+}
+
+func (c *paymentRequest) Bind(r *http.Request) error {
 	return nil
 }
 
-func newPaymentResponse(id uuid.UUID) *PaymentResponse {
-	return &PaymentResponse{ID: id.String()}
+type paymentResponse struct {
+	*domain.Payment
+	Type    string `json:"type"`
+	Version int    `json:"version"`
+}
+
+func newPaymentResponse(payment *domain.Payment) *paymentResponse {
+	return &paymentResponse{Payment: payment, Type: "Payment", Version: 0}
 }
 
 // PaymentListResponse is the response payload for a list of Payments.
-type PaymentListResponse struct {
-	Data []*PaymentResponse `json:"data"`
+type paymentListResponse struct {
+	Data []*paymentResponse `json:"data"`
 }
 
-// Render implements the chi Renderer interface
-func (pl *PaymentListResponse) Render(w http.ResponseWriter, r *http.Request) error {
-	return nil
-}
-
-func newPaymentListResponse(payments []*domain.Payment) *PaymentListResponse {
-	list := []*PaymentResponse{}
+func newPaymentListResponse(payments []*domain.Payment) *paymentListResponse {
+	list := []*paymentResponse{}
 	for _, payment := range payments {
-		list = append(list, &PaymentResponse{ID: payment.ID.String()})
+		list = append(list, newPaymentResponse(payment))
 	}
-	return &PaymentListResponse{Data: list}
+	return &paymentListResponse{Data: list}
 }
