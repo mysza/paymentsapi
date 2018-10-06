@@ -12,7 +12,7 @@ type Payment struct {
 	ID             string             `json:"id" validate:"-"`
 	OrganisationID string             `json:"organisation_id" validate:"required"`
 	Attributes     *PaymentAttributes `json:"attributes" validate:"required"`
-	AttributesID   uint               `json:"-" gorm:""`
+	AttributesID   uint               `json:"-"`
 }
 
 // Validate validates if a given Payment object is valid.
