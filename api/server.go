@@ -7,23 +7,22 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/jinzhu/gorm"
+	"github.com/mysza/paymentsapi/service"
 )
 
 // Server is the HTTP server of the Payments API.
 type Server struct {
 	*http.Server
-	db *gorm.DB
 }
 
 // NewServer creates and configures a new API server for all application routes.
-func NewServer(address string, db *gorm.DB) (*Server, error) {
-	api, err := NewAPI(db)
+func NewServer(address string, repo service.PaymentsRepository) (*Server, error) {
+	api, err := NewAPI(repo)
 	if err != nil {
 		return nil, err
 	}
 	srv := http.Server{Addr: address, Handler: api.Router()}
-	return &Server{&srv, db}, nil
+	return &Server{&srv}, nil
 }
 
 // Start runs ListenAndServe on the http.Server with graceful shutdown.
@@ -43,6 +42,5 @@ func (srv *Server) Start() {
 	if err := srv.Shutdown(context.Background()); err != nil {
 		panic(err)
 	}
-	srv.db.Close()
-	log.Println("Server gracefully stopped")
+	log.Println("Server stopped")
 }

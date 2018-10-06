@@ -34,6 +34,10 @@ func NewPaymentsService(repo PaymentsRepository) *PaymentsService {
 	}
 }
 
+func (ps *PaymentsService) validate(payment *domain.Payment) error {
+	return ps.validator.Struct(payment)
+}
+
 // Add adds a new payment to the service.
 // Before that, it validates the argument.
 func (ps *PaymentsService) Add(payment *domain.Payment) (string, error) {
@@ -41,7 +45,7 @@ func (ps *PaymentsService) Add(payment *domain.Payment) (string, error) {
 	if payment.ID != "" {
 		return "", NewInputError("Payment cannot have ID set when adding to repository")
 	}
-	if err := payment.Validate(ps.validator); err != nil {
+	if err := ps.validate(payment); err != nil {
 		return "", NewInputError(err.Error())
 	}
 	return ps.repo.Add(payment)
@@ -54,7 +58,7 @@ func (ps *PaymentsService) GetAll() ([]*domain.Payment, error) {
 
 // Update updates existing payment.
 func (ps *PaymentsService) Update(payment *domain.Payment) error {
-	if err := payment.Validate(ps.validator); err != nil {
+	if err := ps.validate(payment); err != nil {
 		return NewInputError(err.Error())
 	}
 	if exists := ps.repo.Exists(payment.ID); !exists {

@@ -25,10 +25,10 @@ func TestAddReturnsErrorOnInvalidInput(t *testing.T) {
 func TestAddReturnsPaymentIDOnValidInput(t *testing.T) {
 	payment := &domain.Payment{
 		OrganisationID: uuid.New().String(),
-		Attributes: &domain.PaymentAttributes{
-			Beneficiary: &domain.BeneficiaryPaymentParty{
-				PaymentParty: &domain.PaymentParty{
-					Account: &domain.Account{
+		Attributes: domain.PaymentAttributes{
+			Beneficiary: domain.BeneficiaryPaymentParty{
+				PaymentParty: domain.PaymentParty{
+					Account: domain.Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -40,8 +40,8 @@ func TestAddReturnsPaymentIDOnValidInput(t *testing.T) {
 				},
 				AccountType: 0,
 			},
-			Debtor: &domain.PaymentParty{
-				Account: &domain.Account{
+			Debtor: domain.PaymentParty{
+				Account: domain.Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -51,27 +51,27 @@ func TestAddReturnsPaymentIDOnValidInput(t *testing.T) {
 				Address:           "10 Debtor Crescent Sourcetown NE1",
 				Name:              "EJ Brown Black",
 			},
-			Sponsor: &domain.Account{
+			Sponsor: domain.Account{
 				AccountNumber: "56781234",
 				BankID:        "123123",
 				BankIDCode:    "GBDSC",
 			},
-			ChargesInformation: &domain.ChargesInformation{
+			ChargesInformation: domain.ChargesInformation{
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges: []*domain.Charge{
-					&domain.Charge{Currency: "USD", Amount: "5.00"},
-					&domain.Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []domain.Charge{
+					domain.Charge{Currency: "USD", Amount: "5.00"},
+					domain.Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
-			FX: &domain.FX{
+			FX: domain.FX{
 				ContractReference: "FX123",
 				ExchangeRate:      "2.00",
 				OriginalAmount:    "100.12",
 				OriginalCurrency:  "USD",
 			},
-			ProcessingDate:       time.Now(),
+			ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
 			Amount:               "100.12",
 			Currency:             "USD",
 			EndToEndReference:    "Some generic string",
@@ -101,10 +101,10 @@ func TestAddReturnsErrorIfIDSet(t *testing.T) {
 	payment := &domain.Payment{
 		ID:             uuid.New().String(),
 		OrganisationID: uuid.New().String(),
-		Attributes: &domain.PaymentAttributes{
-			Beneficiary: &domain.BeneficiaryPaymentParty{
-				PaymentParty: &domain.PaymentParty{
-					Account: &domain.Account{
+		Attributes: domain.PaymentAttributes{
+			Beneficiary: domain.BeneficiaryPaymentParty{
+				PaymentParty: domain.PaymentParty{
+					Account: domain.Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -116,8 +116,8 @@ func TestAddReturnsErrorIfIDSet(t *testing.T) {
 				},
 				AccountType: 0,
 			},
-			Debtor: &domain.PaymentParty{
-				Account: &domain.Account{
+			Debtor: domain.PaymentParty{
+				Account: domain.Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -127,27 +127,27 @@ func TestAddReturnsErrorIfIDSet(t *testing.T) {
 				Address:           "10 Debtor Crescent Sourcetown NE1",
 				Name:              "EJ Brown Black",
 			},
-			Sponsor: &domain.Account{
+			Sponsor: domain.Account{
 				AccountNumber: "56781234",
 				BankID:        "123123",
 				BankIDCode:    "GBDSC",
 			},
-			ChargesInformation: &domain.ChargesInformation{
+			ChargesInformation: domain.ChargesInformation{
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges: []*domain.Charge{
-					&domain.Charge{Currency: "USD", Amount: "5.00"},
-					&domain.Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []domain.Charge{
+					domain.Charge{Currency: "USD", Amount: "5.00"},
+					domain.Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
-			FX: &domain.FX{
+			FX: domain.FX{
 				ContractReference: "FX123",
 				ExchangeRate:      "2.00",
 				OriginalAmount:    "100.12",
 				OriginalCurrency:  "USD",
 			},
-			ProcessingDate:       time.Now(),
+			ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
 			Amount:               "100.12",
 			Currency:             "USD",
 			EndToEndReference:    "Some generic string",
@@ -177,10 +177,10 @@ func TestGetAllReturnsAllPaymentsFromRepo(t *testing.T) {
 		&domain.Payment{
 			ID:             uuid.New().String(),
 			OrganisationID: uuid.New().String(),
-			Attributes: &domain.PaymentAttributes{
-				Beneficiary: &domain.BeneficiaryPaymentParty{
-					PaymentParty: &domain.PaymentParty{
-						Account: &domain.Account{
+			Attributes: domain.PaymentAttributes{
+				Beneficiary: domain.BeneficiaryPaymentParty{
+					PaymentParty: domain.PaymentParty{
+						Account: domain.Account{
 							AccountNumber: "56781234",
 							BankID:        "123123",
 							BankIDCode:    "GBDSC",
@@ -192,8 +192,8 @@ func TestGetAllReturnsAllPaymentsFromRepo(t *testing.T) {
 					},
 					AccountType: 0,
 				},
-				Debtor: &domain.PaymentParty{
-					Account: &domain.Account{
+				Debtor: domain.PaymentParty{
+					Account: domain.Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -203,27 +203,27 @@ func TestGetAllReturnsAllPaymentsFromRepo(t *testing.T) {
 					Address:           "10 Debtor Crescent Sourcetown NE1",
 					Name:              "EJ Brown Black",
 				},
-				Sponsor: &domain.Account{
+				Sponsor: domain.Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
 				},
-				ChargesInformation: &domain.ChargesInformation{
+				ChargesInformation: domain.ChargesInformation{
 					BearerCode:              "SHAR",
 					ReceiverChargesAmount:   "100.12",
 					ReceiverChargesCurrency: "USD",
-					SenderCharges: []*domain.Charge{
-						&domain.Charge{Currency: "USD", Amount: "5.00"},
-						&domain.Charge{Currency: "GBP", Amount: "15.00"},
+					SenderCharges: []domain.Charge{
+						domain.Charge{Currency: "USD", Amount: "5.00"},
+						domain.Charge{Currency: "GBP", Amount: "15.00"},
 					},
 				},
-				FX: &domain.FX{
+				FX: domain.FX{
 					ContractReference: "FX123",
 					ExchangeRate:      "2.00",
 					OriginalAmount:    "100.12",
 					OriginalCurrency:  "USD",
 				},
-				ProcessingDate:       time.Now(),
+				ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
 				Amount:               "100.12",
 				Currency:             "USD",
 				EndToEndReference:    "Some generic string",
@@ -240,10 +240,10 @@ func TestGetAllReturnsAllPaymentsFromRepo(t *testing.T) {
 		&domain.Payment{
 			ID:             uuid.New().String(),
 			OrganisationID: uuid.New().String(),
-			Attributes: &domain.PaymentAttributes{
-				Beneficiary: &domain.BeneficiaryPaymentParty{
-					PaymentParty: &domain.PaymentParty{
-						Account: &domain.Account{
+			Attributes: domain.PaymentAttributes{
+				Beneficiary: domain.BeneficiaryPaymentParty{
+					PaymentParty: domain.PaymentParty{
+						Account: domain.Account{
 							AccountNumber: "56781234",
 							BankID:        "123123",
 							BankIDCode:    "GBDSC",
@@ -255,8 +255,8 @@ func TestGetAllReturnsAllPaymentsFromRepo(t *testing.T) {
 					},
 					AccountType: 0,
 				},
-				Debtor: &domain.PaymentParty{
-					Account: &domain.Account{
+				Debtor: domain.PaymentParty{
+					Account: domain.Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -266,27 +266,27 @@ func TestGetAllReturnsAllPaymentsFromRepo(t *testing.T) {
 					Address:           "10 Debtor Crescent Sourcetown NE1",
 					Name:              "EJ Brown Black",
 				},
-				Sponsor: &domain.Account{
+				Sponsor: domain.Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
 				},
-				ChargesInformation: &domain.ChargesInformation{
+				ChargesInformation: domain.ChargesInformation{
 					BearerCode:              "SHAR",
 					ReceiverChargesAmount:   "100.12",
 					ReceiverChargesCurrency: "USD",
-					SenderCharges: []*domain.Charge{
-						&domain.Charge{Currency: "USD", Amount: "5.00"},
-						&domain.Charge{Currency: "GBP", Amount: "15.00"},
+					SenderCharges: []domain.Charge{
+						domain.Charge{Currency: "USD", Amount: "5.00"},
+						domain.Charge{Currency: "GBP", Amount: "15.00"},
 					},
 				},
-				FX: &domain.FX{
+				FX: domain.FX{
 					ContractReference: "FX123",
 					ExchangeRate:      "2.00",
 					OriginalAmount:    "100.12",
 					OriginalCurrency:  "USD",
 				},
-				ProcessingDate:       time.Now(),
+				ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
 				Amount:               "100.12",
 				Currency:             "USD",
 				EndToEndReference:    "Some generic string",
@@ -331,10 +331,10 @@ func TestUpdateReturnsErrorIfPaymentWithGiveIDDoesNotExist(t *testing.T) {
 	payment := &domain.Payment{
 		ID:             paymentID,
 		OrganisationID: uuid.New().String(),
-		Attributes: &domain.PaymentAttributes{
-			Beneficiary: &domain.BeneficiaryPaymentParty{
-				PaymentParty: &domain.PaymentParty{
-					Account: &domain.Account{
+		Attributes: domain.PaymentAttributes{
+			Beneficiary: domain.BeneficiaryPaymentParty{
+				PaymentParty: domain.PaymentParty{
+					Account: domain.Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -346,8 +346,8 @@ func TestUpdateReturnsErrorIfPaymentWithGiveIDDoesNotExist(t *testing.T) {
 				},
 				AccountType: 0,
 			},
-			Debtor: &domain.PaymentParty{
-				Account: &domain.Account{
+			Debtor: domain.PaymentParty{
+				Account: domain.Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -357,27 +357,27 @@ func TestUpdateReturnsErrorIfPaymentWithGiveIDDoesNotExist(t *testing.T) {
 				Address:           "10 Debtor Crescent Sourcetown NE1",
 				Name:              "EJ Brown Black",
 			},
-			Sponsor: &domain.Account{
+			Sponsor: domain.Account{
 				AccountNumber: "56781234",
 				BankID:        "123123",
 				BankIDCode:    "GBDSC",
 			},
-			ChargesInformation: &domain.ChargesInformation{
+			ChargesInformation: domain.ChargesInformation{
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges: []*domain.Charge{
-					&domain.Charge{Currency: "USD", Amount: "5.00"},
-					&domain.Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []domain.Charge{
+					domain.Charge{Currency: "USD", Amount: "5.00"},
+					domain.Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
-			FX: &domain.FX{
+			FX: domain.FX{
 				ContractReference: "FX123",
 				ExchangeRate:      "2.00",
 				OriginalAmount:    "100.12",
 				OriginalCurrency:  "USD",
 			},
-			ProcessingDate:       time.Now(),
+			ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
 			Amount:               "100.12",
 			Currency:             "USD",
 			EndToEndReference:    "Some generic string",
@@ -406,10 +406,10 @@ func TestUpdateReturnsNilOnValidInput(t *testing.T) {
 	payment := &domain.Payment{
 		ID:             uuid.New().String(),
 		OrganisationID: uuid.New().String(),
-		Attributes: &domain.PaymentAttributes{
-			Beneficiary: &domain.BeneficiaryPaymentParty{
-				PaymentParty: &domain.PaymentParty{
-					Account: &domain.Account{
+		Attributes: domain.PaymentAttributes{
+			Beneficiary: domain.BeneficiaryPaymentParty{
+				PaymentParty: domain.PaymentParty{
+					Account: domain.Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -421,8 +421,8 @@ func TestUpdateReturnsNilOnValidInput(t *testing.T) {
 				},
 				AccountType: 0,
 			},
-			Debtor: &domain.PaymentParty{
-				Account: &domain.Account{
+			Debtor: domain.PaymentParty{
+				Account: domain.Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -432,27 +432,27 @@ func TestUpdateReturnsNilOnValidInput(t *testing.T) {
 				Address:           "10 Debtor Crescent Sourcetown NE1",
 				Name:              "EJ Brown Black",
 			},
-			Sponsor: &domain.Account{
+			Sponsor: domain.Account{
 				AccountNumber: "56781234",
 				BankID:        "123123",
 				BankIDCode:    "GBDSC",
 			},
-			ChargesInformation: &domain.ChargesInformation{
+			ChargesInformation: domain.ChargesInformation{
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges: []*domain.Charge{
-					&domain.Charge{Currency: "USD", Amount: "5.00"},
-					&domain.Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []domain.Charge{
+					domain.Charge{Currency: "USD", Amount: "5.00"},
+					domain.Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
-			FX: &domain.FX{
+			FX: domain.FX{
 				ContractReference: "FX123",
 				ExchangeRate:      "2.00",
 				OriginalAmount:    "100.12",
 				OriginalCurrency:  "USD",
 			},
-			ProcessingDate:       time.Now(),
+			ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
 			Amount:               "100.12",
 			Currency:             "USD",
 			EndToEndReference:    "Some generic string",
@@ -483,10 +483,10 @@ func TestGetReturnsPaymentIfExistingIDPassed(t *testing.T) {
 	payment := &domain.Payment{
 		ID:             id,
 		OrganisationID: uuid.New().String(),
-		Attributes: &domain.PaymentAttributes{
-			Beneficiary: &domain.BeneficiaryPaymentParty{
-				PaymentParty: &domain.PaymentParty{
-					Account: &domain.Account{
+		Attributes: domain.PaymentAttributes{
+			Beneficiary: domain.BeneficiaryPaymentParty{
+				PaymentParty: domain.PaymentParty{
+					Account: domain.Account{
 						AccountNumber: "56781234",
 						BankID:        "123123",
 						BankIDCode:    "GBDSC",
@@ -498,8 +498,8 @@ func TestGetReturnsPaymentIfExistingIDPassed(t *testing.T) {
 				},
 				AccountType: 0,
 			},
-			Debtor: &domain.PaymentParty{
-				Account: &domain.Account{
+			Debtor: domain.PaymentParty{
+				Account: domain.Account{
 					AccountNumber: "56781234",
 					BankID:        "123123",
 					BankIDCode:    "GBDSC",
@@ -509,27 +509,27 @@ func TestGetReturnsPaymentIfExistingIDPassed(t *testing.T) {
 				Address:           "10 Debtor Crescent Sourcetown NE1",
 				Name:              "EJ Brown Black",
 			},
-			Sponsor: &domain.Account{
+			Sponsor: domain.Account{
 				AccountNumber: "56781234",
 				BankID:        "123123",
 				BankIDCode:    "GBDSC",
 			},
-			ChargesInformation: &domain.ChargesInformation{
+			ChargesInformation: domain.ChargesInformation{
 				BearerCode:              "SHAR",
 				ReceiverChargesAmount:   "100.12",
 				ReceiverChargesCurrency: "USD",
-				SenderCharges: []*domain.Charge{
-					&domain.Charge{Currency: "USD", Amount: "5.00"},
-					&domain.Charge{Currency: "GBP", Amount: "15.00"},
+				SenderCharges: []domain.Charge{
+					domain.Charge{Currency: "USD", Amount: "5.00"},
+					domain.Charge{Currency: "GBP", Amount: "15.00"},
 				},
 			},
-			FX: &domain.FX{
+			FX: domain.FX{
 				ContractReference: "FX123",
 				ExchangeRate:      "2.00",
 				OriginalAmount:    "100.12",
 				OriginalCurrency:  "USD",
 			},
-			ProcessingDate:       time.Now(),
+			ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
 			Amount:               "100.12",
 			Currency:             "USD",
 			EndToEndReference:    "Some generic string",
