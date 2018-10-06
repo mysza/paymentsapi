@@ -44,4 +44,4 @@ testcover:
 	go tool cover -html=coverage.out
 
 run:
-	./$(BUILD_DIR)/$(OUTPUT)$(EXT)
+	./$(BUILD_DIR)/$(OUTPUT)$(EXT) serve
