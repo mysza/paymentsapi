@@ -18,7 +18,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const validPaymentJSONAdd = `
+const (
+	validPaymentJSONAdd = `
 {
 	"version": 0,
 	"organisation_id": "743d5b63-8e6f-432e-a8fa-c5d8d2ee5fcb",
@@ -77,14 +78,14 @@ const validPaymentJSONAdd = `
 	}
 }`
 
-const invalidPaymentJSON = `
+	invalidPaymentJSON = `
 {
 	"version": 0,
 	"organisation_id": "743d5b63-8e6f-432e-a8fa-c5d8d2ee5fcb",
 	"attributes": {}
 }`
 
-const validPaymentJSONUpdate = `
+	validPaymentJSONUpdate = `
 {
 	"version": 0,
 	"id": "502758ff-505f-4d81-b9d2-83aa9c01ebe2",
@@ -143,6 +144,7 @@ const validPaymentJSONUpdate = `
 		}
 	}
 }`
+)
 
 func createTestPayment() *domain.Payment {
 	return &domain.Payment{

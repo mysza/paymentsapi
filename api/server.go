@@ -3,13 +3,13 @@ package api
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
 
 	"github.com/dgraph-io/badger"
 	"github.com/mysza/paymentsapi/repository"
+	"github.com/sirupsen/logrus"
 )
 
 // Server is the HTTP server of the Payments API.
@@ -29,30 +29,45 @@ func createDatabase() (*badger.DB, error) {
 func StartHTTPServer(port, dbDir string) error {
 	db, err := createDatabase()
 	if err != nil {
-		log.Fatal(err)
+		logrus.WithFields(logrus.Fields{
+			"location": "api/server/StartHTTPServer",
+			"details":  "database open",
+			"error":    err,
+		}).Error("Error opening database")
+		panic(err)
 	}
 	defer db.Close()
 	repo := repository.New(db)
 	api, err := NewAPI(repo)
 	if err != nil {
-		log.Fatal(err)
+		logrus.WithFields(logrus.Fields{
+			"location": "api/server/StartHTTPServer",
+			"details":  "api creation",
+			"error":    err,
+		}).Error("Error creating API")
+		panic(err)
 	}
 	srv := http.Server{Addr: fmt.Sprintf("localhost:%v", port), Handler: api.Router()}
 	go func() {
 		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+			logrus.WithFields(logrus.Fields{
+				"location": "api/server/StartHTTPServer",
+				"details":  "listen & serve",
+				"error":    err,
+			}).Error("Error starting HTTP Server")
 			panic(err)
 		}
 	}()
-	log.Printf("Listening on %s\n", srv.Addr)
+	logrus.Printf("Listening on %s\n", srv.Addr)
 
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	sig := <-quit
-	log.Println("Shutting down server... Reason:", sig)
+	logrus.Println("Shutting down server... Reason:", sig)
 
 	if err := srv.Shutdown(context.Background()); err != nil {
 		panic(err)
 	}
-	log.Println("Server stopped")
+	logrus.Println("Server stopped")
 	return nil
 }

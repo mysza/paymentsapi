@@ -12,11 +12,12 @@ var serveCmd = &cobra.Command{
 	Short: "start http server with configured api",
 	Long:  `Starts a http server and serves the configured api`,
 	Run: func(cmd *cobra.Command, args []string) {
-		api.StartHTTPServer("3000", "./db")
+		api.StartHTTPServer(viper.GetString("port"), viper.GetString("dbdir"))
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(serveCmd)
-	viper.SetDefault("address", "localhost:3000")
+	viper.SetDefault("port", "3000")
+	viper.SetDefault("dbdir", "./db")
 }

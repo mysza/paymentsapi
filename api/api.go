@@ -10,6 +10,10 @@ import (
 	"github.com/go-chi/render"
 )
 
+const (
+	paymentsRoute = "/payments"
+)
+
 // API provides the application HTTP API
 type API struct {
 	payments *PaymentResource
@@ -27,7 +31,7 @@ func NewAPI(repo service.PaymentsRepository) (*API, error) {
 	router.Use(middleware.DefaultCompress)
 	router.Use(middleware.Logger)
 	router.Use(render.SetContentType(render.ContentTypeJSON))
-	router.Mount("/payments", payments.router())
+	router.Mount(paymentsRoute, payments.router())
 	return &API{payments, router}, nil
 }
 

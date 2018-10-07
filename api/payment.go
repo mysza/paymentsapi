@@ -42,6 +42,11 @@ func (rs *PaymentResource) router() *chi.Mux {
 func (rs *PaymentResource) getAll(w http.ResponseWriter, r *http.Request) {
 	payments, err := rs.service.GetAll()
 	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"location": "api/payment/getAll",
+			"details":  "service.GetAll",
+			"error":    err,
+		}).Warn("Error getting payments from repository")
 		render.Render(w, r, &ErrResponse{
 			Error:      err,
 			StatusCode: http.StatusInternalServerError,
@@ -80,10 +85,20 @@ func (rs *PaymentResource) add(w http.ResponseWriter, r *http.Request) {
 func (rs *PaymentResource) update(w http.ResponseWriter, r *http.Request) {
 	input := &paymentRequest{}
 	if err := render.Bind(r, input); err != nil {
+		logrus.WithFields(logrus.Fields{
+			"location": "api/payment/update",
+			"details":  "render.Bind",
+			"error":    err,
+		}).Warn("Error binding to the input")
 		render.Render(w, r, ErrBadRequest)
 	}
 	err := rs.service.Update(input.Payment)
 	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"location": "api/payment/update",
+			"details":  "service.Update",
+			"error":    err,
+		}).Warn("Error updating by service")
 		switch err.(type) {
 		case *service.InputError:
 			render.Render(w, r, ErrBadRequest)
@@ -93,6 +108,7 @@ func (rs *PaymentResource) update(w http.ResponseWriter, r *http.Request) {
 			render.Render(w, r, ErrInternalServerError)
 		}
 	}
+	logrus.WithField("location", "api/payment/update").Infof("Updated Payment with ID: %s", input.ID)
 	render.NoContent(w, r)
 }
 
@@ -100,6 +116,12 @@ func (rs *PaymentResource) get(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "paymentID")
 	payment, err := rs.service.Get(id)
 	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"location": "api/payment/get",
+			"details":  "service.Get",
+			"id":       id,
+			"error":    err,
+		}).Warn("Error getting by service")
 		switch err.(type) {
 		case *service.InputError:
 			render.Render(w, r, ErrBadRequest)
@@ -116,6 +138,12 @@ func (rs *PaymentResource) delete(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "paymentID")
 	err := rs.service.Delete(id)
 	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"location": "api/payment/delete",
+			"details":  "service.Delete",
+			"id":       id,
+			"error":    err,
+		}).Warn("Error deleting by service")
 		switch err.(type) {
 		case *service.InputError:
 			render.Render(w, r, ErrBadRequest)
