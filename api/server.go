@@ -2,12 +2,14 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 
-	"github.com/mysza/paymentsapi/service"
+	"github.com/dgraph-io/badger"
+	"github.com/mysza/paymentsapi/repository"
 )
 
 // Server is the HTTP server of the Payments API.
@@ -15,18 +17,27 @@ type Server struct {
 	*http.Server
 }
 
-// NewServer creates and configures a new API server for all application routes.
-func NewServer(address string, repo service.PaymentsRepository) (*Server, error) {
-	api, err := NewAPI(repo)
-	if err != nil {
-		return nil, err
-	}
-	srv := http.Server{Addr: address, Handler: api.Router()}
-	return &Server{&srv}, nil
+func createDatabase() (*badger.DB, error) {
+	opts := badger.DefaultOptions
+	opts.Dir = "./db"
+	opts.ValueDir = "./db"
+	return badger.Open(opts)
 }
 
-// Start runs ListenAndServe on the http.Server with graceful shutdown.
-func (srv *Server) Start() {
+// StartHTTPServer starts HTTP server on a given port, with database
+// being used at dbDir.
+func StartHTTPServer(port, dbDir string) error {
+	db, err := createDatabase()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	repo := repository.New(db)
+	api, err := NewAPI(repo)
+	if err != nil {
+		log.Fatal(err)
+	}
+	srv := http.Server{Addr: fmt.Sprintf("localhost:%v", port), Handler: api.Router()}
 	go func() {
 		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
 			panic(err)
@@ -43,4 +54,5 @@ func (srv *Server) Start() {
 		panic(err)
 	}
 	log.Println("Server stopped")
+	return nil
 }
