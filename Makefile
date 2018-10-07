@@ -43,5 +43,5 @@ testcover:
 	go test -coverprofile=coverage.out ./...
 	go tool cover -html=coverage.out
 
-run:
+run: build
 	./$(BUILD_DIR)/$(OUTPUT)$(EXT) serve
