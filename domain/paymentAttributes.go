@@ -1,9 +1,5 @@
 package domain
 
-import (
-	"time"
-)
-
 // PaymentAttributes holds information about actual payment transaction
 type PaymentAttributes struct {
 	Amount               string                  `json:"amount" validate:"required,numeric"`
@@ -18,7 +14,7 @@ type PaymentAttributes struct {
 	PaymentPurpose       string                  `json:"payment_purpose" validate:"required"`
 	PaymentScheme        string                  `json:"payment_scheme" validate:"required"`
 	PaymentType          string                  `json:"payment_type" validate:"required"`
-	ProcessingDate       time.Time               `json:"processing_date" validate:"required"`
+	ProcessingDate       string                  `json:"processing_date" validate:"required"`
 	SchemePaymentType    string                  `json:"scheme_payment_type" validate:"required"`
 	SchemePaymentSubType string                  `json:"scheme_payment_sub_type" validate:"required"`
 	Reference            string                  `json:"reference" validate:"required"`

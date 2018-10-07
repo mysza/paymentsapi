@@ -4,7 +4,6 @@ import (
 	"io/ioutil"
 	"os"
 	"testing"
-	"time"
 
 	"github.com/dgraph-io/badger"
 	"github.com/google/uuid"
@@ -64,7 +63,7 @@ func newPayment() *domain.Payment {
 				OriginalAmount:    "100.12",
 				OriginalCurrency:  "USD",
 			},
-			ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
+			ProcessingDate:       "2017-01-18",
 			Amount:               "100.12",
 			Currency:             "USD",
 			EndToEndReference:    "Some generic string",

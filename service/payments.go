@@ -41,6 +41,9 @@ func (ps *PaymentsService) validate(payment *domain.Payment) error {
 // Add adds a new payment to the service.
 // Before that, it validates the argument.
 func (ps *PaymentsService) Add(payment *domain.Payment) (string, error) {
+	if payment == nil {
+		return "", NewInputError("Payment is nil")
+	}
 	// check if ID is set
 	if payment.ID != "" {
 		return "", NewInputError("Payment cannot have ID set when adding to repository")

@@ -2,7 +2,6 @@ package service
 
 import (
 	"testing"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/mysza/paymentsapi/domain"
@@ -71,7 +70,7 @@ func TestAddReturnsPaymentIDOnValidInput(t *testing.T) {
 				OriginalAmount:    "100.12",
 				OriginalCurrency:  "USD",
 			},
-			ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
+			ProcessingDate:       "2017-01-18",
 			Amount:               "100.12",
 			Currency:             "USD",
 			EndToEndReference:    "Some generic string",
@@ -147,7 +146,7 @@ func TestAddReturnsErrorIfIDSet(t *testing.T) {
 				OriginalAmount:    "100.12",
 				OriginalCurrency:  "USD",
 			},
-			ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
+			ProcessingDate:       "2017-01-18",
 			Amount:               "100.12",
 			Currency:             "USD",
 			EndToEndReference:    "Some generic string",
@@ -223,7 +222,7 @@ func TestGetAllReturnsAllPaymentsFromRepo(t *testing.T) {
 					OriginalAmount:    "100.12",
 					OriginalCurrency:  "USD",
 				},
-				ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
+				ProcessingDate:       "2017-01-18",
 				Amount:               "100.12",
 				Currency:             "USD",
 				EndToEndReference:    "Some generic string",
@@ -286,7 +285,7 @@ func TestGetAllReturnsAllPaymentsFromRepo(t *testing.T) {
 					OriginalAmount:    "100.12",
 					OriginalCurrency:  "USD",
 				},
-				ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
+				ProcessingDate:       "2017-01-18",
 				Amount:               "100.12",
 				Currency:             "USD",
 				EndToEndReference:    "Some generic string",
@@ -377,7 +376,7 @@ func TestUpdateReturnsErrorIfPaymentWithGiveIDDoesNotExist(t *testing.T) {
 				OriginalAmount:    "100.12",
 				OriginalCurrency:  "USD",
 			},
-			ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
+			ProcessingDate:       "2017-01-18",
 			Amount:               "100.12",
 			Currency:             "USD",
 			EndToEndReference:    "Some generic string",
@@ -452,7 +451,7 @@ func TestUpdateReturnsNilOnValidInput(t *testing.T) {
 				OriginalAmount:    "100.12",
 				OriginalCurrency:  "USD",
 			},
-			ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
+			ProcessingDate:       "2017-01-18",
 			Amount:               "100.12",
 			Currency:             "USD",
 			EndToEndReference:    "Some generic string",
@@ -529,7 +528,7 @@ func TestGetReturnsPaymentIfExistingIDPassed(t *testing.T) {
 				OriginalAmount:    "100.12",
 				OriginalCurrency:  "USD",
 			},
-			ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
+			ProcessingDate:       "2017-01-18",
 			Amount:               "100.12",
 			Currency:             "USD",
 			EndToEndReference:    "Some generic string",

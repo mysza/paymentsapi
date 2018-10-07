@@ -1,11 +1,10 @@
 package api
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 
-	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
@@ -35,11 +34,8 @@ func (rs *PaymentResource) router() *chi.Mux {
 	r.Get("/", rs.getAll)
 	r.Post("/", rs.add)
 	r.Put("/", rs.update)
-	r.Route("/{paymentID}", func(r chi.Router) {
-		r.Use(rs.paymentCtx)
-		r.Get("/", rs.get)
-		r.Delete("/", rs.delete)
-	})
+	r.Get("/{paymentID}", rs.get)
+	r.Delete("/{paymentID}", rs.delete)
 	return r
 }
 
@@ -58,14 +54,27 @@ func (rs *PaymentResource) getAll(w http.ResponseWriter, r *http.Request) {
 func (rs *PaymentResource) add(w http.ResponseWriter, r *http.Request) {
 	input := &paymentRequest{}
 	if err := render.Bind(r, input); err != nil {
+		logrus.WithFields(logrus.Fields{
+			"location": "api/payment/add",
+			"details":  "render.Bind",
+			"error":    err,
+		}).Warn("Error binding to the input")
 		render.Render(w, r, ErrBadRequest)
+		return
 	}
 	id, err := rs.service.Add(input.Payment)
 	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"location": "api/payment/add",
+			"details":  "service.Add",
+			"error":    err,
+		}).Warn("Error adding by service")
 		render.Render(w, r, ErrBadRequest)
+		return
 	}
 	w.Header().Set("Location", fmt.Sprintf("/payments/%v", id))
-	render.NoContent(w, r)
+	logrus.WithField("location", "api/payment/add").Infof("Added new Payment with ID: %s", id)
+	w.WriteHeader(http.StatusCreated)
 }
 
 func (rs *PaymentResource) update(w http.ResponseWriter, r *http.Request) {
@@ -87,19 +96,8 @@ func (rs *PaymentResource) update(w http.ResponseWriter, r *http.Request) {
 	render.NoContent(w, r)
 }
 
-func (rs *PaymentResource) paymentCtx(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		id, err := uuid.Parse(chi.URLParam(r, "paymentID"))
-		if err != nil {
-			render.Render(w, r, ErrBadRequest)
-		}
-		ctx := context.WithValue(r.Context(), ctxPaymentID, id)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
-}
-
 func (rs *PaymentResource) get(w http.ResponseWriter, r *http.Request) {
-	id := r.Context().Value(ctxPaymentID).(string)
+	id := chi.URLParam(r, "paymentID")
 	payment, err := rs.service.Get(id)
 	if err != nil {
 		switch err.(type) {
@@ -115,7 +113,7 @@ func (rs *PaymentResource) get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rs *PaymentResource) delete(w http.ResponseWriter, r *http.Request) {
-	id := r.Context().Value(ctxPaymentID).(string)
+	id := chi.URLParam(r, "paymentID")
 	err := rs.service.Delete(id)
 	if err != nil {
 		switch err.(type) {

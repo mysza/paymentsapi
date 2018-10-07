@@ -2,7 +2,6 @@ package domain
 
 import (
 	"testing"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -58,7 +57,7 @@ func createTestPayment() *Payment {
 				OriginalAmount:    "100.12",
 				OriginalCurrency:  "USD",
 			},
-			ProcessingDate:       time.Date(2018, time.October, 5, 12, 00, 00, 00, time.Local),
+			ProcessingDate:       "2017-01-18",
 			Amount:               "100.12",
 			Currency:             "USD",
 			EndToEndReference:    "Some generic string",
