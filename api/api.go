@@ -28,7 +28,6 @@ func NewAPI(repo service.PaymentsRepository) (*API, error) {
 	router.Use(middleware.RequestID)
 	router.Use(middleware.DefaultCompress)
 	router.Use(middleware.Timeout(15 * time.Second))
-	router.Use(middleware.DefaultCompress)
 	router.Use(middleware.Logger)
 	router.Use(render.SetContentType(render.ContentTypeJSON))
 	router.Mount(paymentsRoute, payments.router())
