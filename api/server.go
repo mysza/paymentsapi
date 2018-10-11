@@ -17,17 +17,17 @@ type Server struct {
 	*http.Server
 }
 
-func createDatabase() (*badger.DB, error) {
+func createDatabase(databaseDir string) (*badger.DB, error) {
 	opts := badger.DefaultOptions
-	opts.Dir = "./db"
-	opts.ValueDir = "./db"
+	opts.Dir = databaseDir
+	opts.ValueDir = databaseDir
 	return badger.Open(opts)
 }
 
 // StartHTTPServer starts HTTP server on a given port, with database
 // being used at dbDir.
 func StartHTTPServer(port, dbDir string) error {
-	db, err := createDatabase()
+	db, err := createDatabase(dbDir)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"location": "api/server/StartHTTPServer",
