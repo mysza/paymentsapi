@@ -22,14 +22,18 @@ func createDB() (*badger.DB, string) {
 	return db, dir
 }
 
-func TestAdd(t *testing.T) {
+func prepareRepository() (*PaymentsRepository, func()) {
 	db, dir := createDB()
-	defer func() {
-		// cleanup
+	cleanup := func() {
 		db.Close()
 		os.RemoveAll(dir)
-	}()
-	repo := New(db)
+	}
+	return New(db), cleanup
+}
+
+func TestAdd(t *testing.T) {
+	repo, cleanup := prepareRepository()
+	defer cleanup()
 	payment := domain.CreateTestPayment()
 	payment.ID = ""
 	assert := assert.New(t)
@@ -42,13 +46,8 @@ func TestAdd(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	db, dir := createDB()
-	defer func() {
-		// cleanup
-		db.Close()
-		os.RemoveAll(dir)
-	}()
-	repo := New(db)
+	repo, cleanup := prepareRepository()
+	defer cleanup()
 	payment := domain.CreateTestPayment()
 	id, _ := repo.Add(payment)
 	payment.ID = id
@@ -62,13 +61,8 @@ func TestGet(t *testing.T) {
 }
 
 func TestGetAll(t *testing.T) {
-	db, dir := createDB()
-	defer func() {
-		// cleanup
-		db.Close()
-		os.RemoveAll(dir)
-	}()
-	repo := New(db)
+	repo, cleanup := prepareRepository()
+	defer cleanup()
 	payment := domain.CreateTestPayment()
 	// create 10 instances of payments
 	for ix := 0; ix < 10; ix++ {
@@ -84,13 +78,8 @@ func TestGetAll(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	db, dir := createDB()
-	defer func() {
-		// cleanup
-		db.Close()
-		os.RemoveAll(dir)
-	}()
-	repo := New(db)
+	repo, cleanup := prepareRepository()
+	defer cleanup()
 	payment := domain.CreateTestPayment()
 	id, _ := repo.Add(payment)
 	assert := assert.New(t)
@@ -102,13 +91,8 @@ func TestDelete(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	db, dir := createDB()
-	defer func() {
-		// cleanup
-		db.Close()
-		os.RemoveAll(dir)
-	}()
-	repo := New(db)
+	repo, cleanup := prepareRepository()
+	defer cleanup()
 	payment := domain.CreateTestPayment()
 	var id string
 	// create 10 instances of payments
