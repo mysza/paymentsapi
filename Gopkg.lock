@@ -130,6 +130,14 @@
   version = "v1.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:5c3444689562053b027ef3b96372e306adbe0d7d109b6cdd48d01eb80f8bab14"
+  name = "github.com/jinzhu/copier"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "7e38e58719c33e0d44d585c4ab477a30f8cb82dd"
+
+[[projects]]
   digest = "1:0a69a1c0db3591fcefb47f115b224592c8dfa4368b7ba9fae509d5e16cdc95c8"
   name = "github.com/konsorten/go-windows-terminal-sequences"
   packages = ["."]
@@ -334,6 +342,7 @@
     "github.com/go-chi/chi/middleware",
     "github.com/go-chi/render",
     "github.com/google/uuid",
+    "github.com/jinzhu/copier",
     "github.com/mitchellh/go-homedir",
     "github.com/sirupsen/logrus",
     "github.com/spf13/cobra",
